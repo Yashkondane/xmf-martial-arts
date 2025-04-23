@@ -12,6 +12,7 @@ import { AboutSection } from "@/components/about-section"
 import { InstructorCarousel } from "@/components/instructor-carousel"
 import { AchievementsSection } from "@/components/achievements-section"
 import { SchedulePopup } from "@/components/schedule-popup"
+import { GallerySection } from "@/components/gallery-section"
 
 export default function Home() {
   const [isPopupOpen, setIsPopupOpen] = useState(false)
@@ -51,6 +52,9 @@ export default function Home() {
             </Link>
             <Link href="#achievements" className="transition-colors hover:text-foreground/80">
               Achievements
+            </Link>
+            <Link href="#gallery" className="transition-colors hover:text-foreground/80">
+              Gallery
             </Link>
             <Link href="#contact" className="transition-colors hover:text-foreground/80">
               Contact Us
@@ -123,6 +127,8 @@ export default function Home() {
         </section>
 
         <AchievementsSection />
+
+        <GallerySection />
 
         <section ref={contactRef} id="contact">
           <ContactSection />
