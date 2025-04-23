@@ -1,71 +1,18 @@
-"use client"
-
-import { useState, useRef } from "react"
-import Image from "next/image"
+import Link from "next/link"
 import { ImageSlider } from "@/components/image-slider"
 import { VideoModal } from "@/components/video-modal"
 import { ProgramSection } from "@/components/program-section"
 import { ContactSection } from "@/components/contact-section"
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { AboutSection } from "@/components/about-section"
 import { InstructorCarousel } from "@/components/instructor-carousel"
 import { AchievementsSection } from "@/components/achievements-section"
-import { SchedulePopup } from "@/components/schedule-popup"
-import { GallerySection } from "@/components/gallery-section"
+import { Navbar } from "@/components/navbar"
+import { Footer } from "@/components/footer"
 
 export default function Home() {
-  const [isPopupOpen, setIsPopupOpen] = useState(false)
-  const contactRef = useRef<HTMLElement>(null)
-
-  const handleScheduleClick = () => {
-    setIsPopupOpen(true)
-
-    // Scroll to contact section
-    contactRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Image
-              src="/placeholder.svg?height=40&width=40"
-              alt="XMF Logo"
-              width={40}
-              height={40}
-              className="h-10 w-10"
-            />
-            <span className="text-xl font-bold">XMF-EXTREME</span>
-          </div>
-
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <Link href="#" className="transition-colors hover:text-foreground/80">
-              Home
-            </Link>
-            <Link href="#about" className="transition-colors hover:text-foreground/80">
-              About XMF
-            </Link>
-            <Link href="#programs" className="transition-colors hover:text-foreground/80">
-              Programs
-            </Link>
-            <Link href="#achievements" className="transition-colors hover:text-foreground/80">
-              Achievements
-            </Link>
-            <Link href="#gallery" className="transition-colors hover:text-foreground/80">
-              Gallery
-            </Link>
-            <Link href="#contact" className="transition-colors hover:text-foreground/80">
-              Contact Us
-            </Link>
-          </nav>
-
-          <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={handleScheduleClick}>
-            SCHEDULE & PRICING
-          </Button>
-        </div>
-      </header>
+      <Navbar />
 
       <main className="flex-1">
         <section className="relative h-[80vh] w-full">
@@ -86,14 +33,14 @@ export default function Home() {
               <Link href="#programs">
                 <Button className="bg-red-600 hover:bg-red-700 text-white min-w-[200px]">SELECT A PROGRAM</Button>
               </Link>
-              <Button variant="outline" className="bg-white text-black hover:bg-gray-100 min-w-[200px]">
-                LEARN MORE
-              </Button>
+              <Link href="/about">
+                <Button variant="outline" className="bg-white text-black hover:bg-gray-100 min-w-[200px]">
+                  LEARN MORE
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
-
-        <AboutSection />
 
         <section id="programs" className="py-16 bg-black text-white">
           <div className="container">
@@ -128,20 +75,12 @@ export default function Home() {
 
         <AchievementsSection />
 
-        <GallerySection />
-
-        <section ref={contactRef} id="contact">
+        <section id="contact">
           <ContactSection />
         </section>
       </main>
 
-      <footer className="bg-black text-white py-6">
-        <div className="container text-center">
-          <p>© {new Date().getFullYear()} XMF-EXTREME MARTIAL ARTS AND FITNESS. All rights reserved.</p>
-        </div>
-      </footer>
-
-      <SchedulePopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+      <Footer />
     </div>
   )
 }
