@@ -5,6 +5,7 @@ import { Inter } from "next/font/google"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import "./globals.css"
+import { Preloader } from "@/components/preloader"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -17,6 +18,7 @@ export default function ClientLayout({
 
   return (
     <body className={inter.className}>
+      <Preloader />
       <AnimatePresence mode="wait">
         <motion.div
           key={pathname}

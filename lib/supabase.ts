@@ -69,6 +69,21 @@ export async function signOut() {
   }
 }
 
+export async function resetPasswordForEmail(email: string, redirectTo: string) {
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo,
+    })
+
+    if (error) throw error
+
+    return { error: null }
+  } catch (error) {
+    console.error("Error resetting password:", error)
+    return { error }
+  }
+}
+
 export async function getUserProfile(userId: string) {
   try {
     // First check if the profile exists

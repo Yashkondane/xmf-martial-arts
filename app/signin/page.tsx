@@ -178,11 +178,16 @@ export default function SignIn() {
             </Button>
           </form>
 
-          <div className="text-center mt-6">
+          <div className="text-center mt-6 space-y-2">
             <p>
               Don't have an account?{" "}
               <Link href="/signup" className="text-red-600 hover:text-red-800 font-medium">
                 Sign Up
+              </Link>
+            </p>
+            <p>
+              <Link href="/reset-password" className="text-gray-600 hover:text-gray-800">
+                Forgot your password?
               </Link>
             </p>
           </div>

@@ -1,3 +1,5 @@
+import { Facebook, Youtube, Instagram, Twitter, Linkedin } from "lucide-react"
+
 export function ContactSection() {
   return (
     <section id="contact" className="py-16 bg-red-600 text-white">
@@ -45,7 +47,59 @@ export function ContactSection() {
           </a>
         </div>
 
-        <p className="text-white text-sm max-w-2xl mx-auto">
+        {/* Social Media Icons */}
+        <div className="mt-10">
+          <h3 className="text-xl font-bold mb-4">CONNECT WITH US</h3>
+          <div className="flex justify-center gap-4">
+            <a
+              href="https://www.facebook.com/share/1JJfjLsXmc/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-transform hover:scale-110"
+              aria-label="Facebook"
+            >
+              <Facebook className="h-6 w-6" />
+            </a>
+            <a
+              href="https://youtube.com/@farhanxmf01?si=4kWtvMGkYc8bZReK"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-transform hover:scale-110"
+              aria-label="YouTube"
+            >
+              <Youtube className="h-6 w-6" />
+            </a>
+            <a
+              href="https://www.instagram.com/xmf_martial_arts?igsh=MWszemN5czhmejZvOA=="
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-transform hover:scale-110"
+              aria-label="Instagram"
+            >
+              <Instagram className="h-6 w-6" />
+            </a>
+            <a
+              href="https://x.com/xmf_martialarts?t=sT8ERbB-b0Q6NY8olBTIQA&s=09"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-transform hover:scale-110"
+              aria-label="Twitter"
+            >
+              <Twitter className="h-6 w-6" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/farhan-khan-32a438254?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-black hover:bg-gray-900 text-white p-3 rounded-full transition-transform hover:scale-110"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="h-6 w-6" />
+            </a>
+          </div>
+        </div>
+
+        <p className="text-white text-sm max-w-2xl mx-auto mt-8">
           This section will also include records and communication archives in the future.
         </p>
       </div>

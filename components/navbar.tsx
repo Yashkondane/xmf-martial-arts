@@ -70,6 +70,9 @@ export function Navbar() {
           <Link href="/gallery" className="transition-colors hover:text-foreground/80">
             Gallery
           </Link>
+          <Link href="/locations" className="transition-colors hover:text-foreground/80">
+            Our Locations
+          </Link>
           <Link href="/#contact" className="transition-colors hover:text-foreground/80">
             Contact Us
           </Link>
@@ -113,6 +116,9 @@ export function Navbar() {
               </Link>
               <Link href="/gallery" className="py-2 hover:text-foreground/80" onClick={() => setIsMenuOpen(false)}>
                 Gallery
+              </Link>
+              <Link href="/locations" className="py-2 hover:text-foreground/80" onClick={() => setIsMenuOpen(false)}>
+                Our Locations
               </Link>
               <Link href="/#contact" className="py-2 hover:text-foreground/80" onClick={() => setIsMenuOpen(false)}>
                 Contact Us
