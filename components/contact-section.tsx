@@ -1,4 +1,5 @@
 import { Facebook, Youtube, Instagram, Twitter, Linkedin } from "lucide-react"
+import Link from "next/link"
 
 export function ContactSection() {
   return (
@@ -100,7 +101,10 @@ export function ContactSection() {
         </div>
 
         <p className="text-white text-sm max-w-2xl mx-auto mt-8">
-          This section will also include records and communication archives in the future.
+          For any queries and questions, go through our{" "}
+          <Link href="/faqs" className="underline hover:text-gray-200">
+            FAQs
+          </Link>
         </p>
       </div>
     </section>

@@ -6,6 +6,7 @@ import { ContactSection } from "@/components/contact-section"
 import { Button } from "@/components/ui/button"
 import { InstructorCarousel } from "@/components/instructor-carousel"
 import { AchievementsSection } from "@/components/achievements-section"
+import { TestimonialsSection } from "@/components/testimonials-section"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 
@@ -23,7 +24,7 @@ export default function Home() {
               <VideoModal />
             </div>
 
-            <h1 className="text-2xl md:text-4xl font-bold mb-2">SAN FRANCISCO & MILLBRAE MARTIAL ARTS & FITNESS</h1>
+            <h1 className="text-2xl md:text-4xl font-bold mb-2">XMF – EXTREME MARTIAL ARTS AND FITNESS</h1>
             <h2 className="text-3xl md:text-5xl font-bold mb-4">LIVE YOUR BEST LIFE WITH XMF-EXTREME</h2>
             <p className="max-w-2xl mb-8 text-lg">
               Unveiling the Art of Martial Arts: A Journey of Discipline, Strength, and Self-Discovery
@@ -74,6 +75,8 @@ export default function Home() {
         </section>
 
         <AchievementsSection />
+
+        <TestimonialsSection />
 
         <section id="contact">
           <ContactSection />

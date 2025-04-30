@@ -28,9 +28,9 @@ export default function About() {
                   have helped thousands of students achieve their goals and discover their potential.
                 </p>
                 <p className="text-gray-300">
-                  With locations in San Francisco and Millbrae, we offer comprehensive programs for all ages and skill
-                  levels. Whether you're looking to compete at the highest levels or simply want to improve your fitness
-                  and confidence, XMF-EXTREME has a program for you.
+                  With locations in Taverekere, Free Kick, The Iwan, and Avalahalli, we offer comprehensive programs for
+                  all ages and skill levels. Whether you're looking to compete at the highest levels or simply want to
+                  improve your fitness and confidence, XMF-EXTREME has a program for you.
                 </p>
               </div>
 
@@ -41,6 +41,42 @@ export default function About() {
                   fill
                   className="object-cover"
                 />
+              </div>
+            </div>
+
+            <div className="mt-16">
+              <h2 className="text-2xl font-bold mb-6">Our Founder – Farhan Khan XMF</h2>
+
+              <div className="flex flex-col md:flex-row items-center gap-12">
+                <div className="flex-1 relative h-80 w-full overflow-hidden rounded-lg border border-red-600">
+                  <Image
+                    src="/placeholder.svg?height=600&width=800"
+                    alt="Farhan Khan XMF"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+
+                <div className="flex-1">
+                  <p className="text-gray-300 mb-4">
+                    Farhan Khan XMF is a seasoned martial arts coach with over 9 years of experience. A national
+                    instructor, he has trained students to achieve success at state and national levels. His approach
+                    blends discipline, fitness, and mental strength to build complete athletes. He holds a Black Belt in
+                    ITF Taekwondo and a 3rd Dan Black Belt in Karate (WFSKO).
+                  </p>
+                  <p className="text-gray-300 mb-4">
+                    Farhan is an active MMA fighter and a member of the Taekwondo Association of Karnataka. He also
+                    claimed the Bengaluru Bodybuilding 2024 Men's Physique Title, proving his dedication to fitness.
+                    With a diverse martial arts background, he provides students with practical, real-world combat
+                    skills. He fosters a focused and positive training space where students of all levels thrive.
+                  </p>
+                  <p className="text-gray-300">
+                    Known as one of Karnataka's top trainers, Farhan emphasizes respect, integrity, and perseverance. He
+                    inspires students to push limits and grow both technically and mentally. His coaching style builds
+                    strength, confidence, and a strong sense of discipline. Farhan is deeply committed to shaping
+                    well-rounded individuals through martial arts.
+                  </p>
+                </div>
               </div>
             </div>
 

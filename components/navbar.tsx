@@ -33,7 +33,12 @@ export function Navbar() {
   }, [])
 
   // Don't show navbar on sign in and sign up pages
-  if (pathname === "/signin" || pathname === "/signup") {
+  if (
+    pathname === "/signin" ||
+    pathname === "/signup" ||
+    pathname === "/reset-password" ||
+    pathname === "/update-password"
+  ) {
     return null
   }
 
@@ -72,6 +77,9 @@ export function Navbar() {
           </Link>
           <Link href="/locations" className="transition-colors hover:text-foreground/80">
             Our Locations
+          </Link>
+          <Link href="/faqs" className="transition-colors hover:text-foreground/80">
+            FAQs
           </Link>
           <Link href="/#contact" className="transition-colors hover:text-foreground/80">
             Contact Us
@@ -119,6 +127,9 @@ export function Navbar() {
               </Link>
               <Link href="/locations" className="py-2 hover:text-foreground/80" onClick={() => setIsMenuOpen(false)}>
                 Our Locations
+              </Link>
+              <Link href="/faqs" className="py-2 hover:text-foreground/80" onClick={() => setIsMenuOpen(false)}>
+                FAQs
               </Link>
               <Link href="/#contact" className="py-2 hover:text-foreground/80" onClick={() => setIsMenuOpen(false)}>
                 Contact Us
