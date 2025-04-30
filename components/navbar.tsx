@@ -47,11 +47,11 @@ export function Navbar() {
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <Image
-            src="/placeholder.svg?height=40&width=40"
+            src="/images/xmf-logo-white-bg.jpeg"
             alt="XMF Logo"
             width={40}
             height={40}
-            className="h-10 w-10"
+            className="h-10 w-10 rounded-full"
           />
           <span className="text-xl font-bold">XMF-EXTREME</span>
         </Link>

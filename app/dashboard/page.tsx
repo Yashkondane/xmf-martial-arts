@@ -182,9 +182,7 @@ export default function Dashboard() {
               </div>
             </TabsContent>
 
-            {/* Rest of the tabs content remains the same */}
             <TabsContent value="schedule">
-              {/* Schedule content remains the same */}
               <Card>
                 <CardHeader>
                   <CardTitle>My Class Schedule</CardTitle>
@@ -243,7 +241,6 @@ export default function Dashboard() {
             </TabsContent>
 
             <TabsContent value="progress">
-              {/* Progress content remains the same */}
               <Card>
                 <CardHeader>
                   <CardTitle>My Progress</CardTitle>
@@ -314,7 +311,6 @@ export default function Dashboard() {
             </TabsContent>
 
             <TabsContent value="account">
-              {/* Account content remains the same */}
               <Card>
                 <CardHeader>
                   <CardTitle>Account Information</CardTitle>
@@ -331,6 +327,8 @@ export default function Dashboard() {
                             fill
                             className="object-cover"
                           />
+                        ) : profile ? (
+                          <Image src="/images/xmf-logo-white-bg.jpeg" alt="XMF Logo" fill className="object-cover" />
                         ) : (
                           <User className="h-full w-full p-4 text-gray-400" />
                         )}

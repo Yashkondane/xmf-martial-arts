@@ -45,7 +45,7 @@ export default function ResetPassword() {
       {/* Left side - Logo and branding */}
       <div className="hidden md:flex md:w-1/2 bg-black flex-col items-center justify-center p-8">
         <div className="relative w-32 h-32 mb-6">
-          <Image src="/placeholder.svg?height=200&width=200" alt="XMF Logo" fill className="object-contain" />
+          <Image src="/images/xmf-logo-black-bg.jpeg" alt="XMF Logo" fill className="object-contain rounded-full" />
         </div>
         <h1 className="text-3xl font-bold text-white mb-2">XMF-EXTREME</h1>
         <p className="text-red-600 text-xl">MARTIAL ARTS & FITNESS</p>

@@ -25,7 +25,7 @@ export function Preloader() {
     >
       <div className="flex flex-col items-center">
         <div className="relative w-32 h-32 mb-6">
-          <Image src="/placeholder.svg?height=200&width=200" alt="XMF Logo" fill className="object-contain" />
+          <Image src="/images/xmf-logo-black-bg.jpeg" alt="XMF Logo" fill className="object-contain rounded-full" />
         </div>
         <h1 className="text-3xl font-bold text-white mb-4">XMF-EXTREME</h1>
         <div className="w-48 h-1 bg-gray-800 rounded-full overflow-hidden">
