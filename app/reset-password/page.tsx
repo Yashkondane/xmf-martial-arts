@@ -8,9 +8,9 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { supabase } from "@/lib/supabase"
+import { resetPasswordForEmail } from "@/lib/supabase"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertCircle, Mail } from "lucide-react"
+import { AlertCircle, Mail, ArrowLeft } from "lucide-react"
 
 export default function ResetPassword() {
   const [email, setEmail] = useState("")
@@ -25,16 +25,14 @@ export default function ResetPassword() {
     setSuccess(false)
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/update-password`,
-      })
+      const { error } = await resetPasswordForEmail(email)
 
       if (error) throw error
 
       setSuccess(true)
     } catch (err: any) {
       setError(err.message || "Failed to send password reset email. Please try again.")
-      console.error(err)
+      console.error("Reset password error:", err)
     } finally {
       setIsLoading(false)
     }
@@ -47,7 +45,7 @@ export default function ResetPassword() {
         <div className="relative w-32 h-32 mb-6">
           <Image src="/images/xmf-logo-black-bg.jpeg" alt="XMF Logo" fill className="object-contain rounded-full" />
         </div>
-        <h1 className="text-3xl font-bold text-white mb-2">XMF-EXTREME</h1>
+        <h1 className="text-3xl font-bold text-white mb-2 text-animate">XMF-EXTREME</h1>
         <p className="text-red-600 text-xl">MARTIAL ARTS & FITNESS</p>
       </div>
 
@@ -59,7 +57,11 @@ export default function ResetPassword() {
               <h2 className="text-3xl font-bold">Reset Password</h2>
               <p className="text-gray-600 mt-2">Enter your email to receive a password reset link.</p>
             </div>
-            <Link href="/signin" className="text-sm text-gray-500 hover:text-gray-700">
+            <Link
+              href="/signin"
+              className="flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors duration-300"
+            >
+              <ArrowLeft className="h-4 w-4 mr-1" />
               Back to Sign In
             </Link>
           </div>
@@ -77,7 +79,11 @@ export default function ResetPassword() {
               <Mail className="h-4 w-4" />
               <AlertTitle>Email Sent</AlertTitle>
               <AlertDescription>
-                If an account exists with this email, you will receive a password reset link. Please check your inbox.
+                <p>If an account exists with this email, you will receive a password reset link.</p>
+                <p className="mt-2">Please check your inbox and spam folders.</p>
+                <p className="mt-2 font-medium">
+                  Click the link in the email to be redirected to the password reset page on our website.
+                </p>
               </AlertDescription>
             </Alert>
           )}
@@ -85,18 +91,25 @@ export default function ResetPassword() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full p-3 border rounded-md"
-              />
+              <div className="relative">
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full p-3 pl-10 border rounded-md"
+                />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              </div>
             </div>
 
-            <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white py-3" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="w-full bg-red-600 hover:bg-red-700 text-white py-3 transition-all duration-300 hover:shadow-lg btn-animate"
+              disabled={isLoading}
+            >
               {isLoading ? "Sending..." : "Send Reset Link"}
             </Button>
           </form>
@@ -104,7 +117,10 @@ export default function ResetPassword() {
           <div className="text-center mt-6">
             <p>
               Remember your password?{" "}
-              <Link href="/signin" className="text-red-600 hover:text-red-800 font-medium">
+              <Link
+                href="/signin"
+                className="text-red-600 hover:text-red-800 font-medium transition-colors duration-300"
+              >
                 Sign In
               </Link>
             </p>

@@ -1,23 +1,119 @@
 import { createClient } from "@supabase/supabase-js"
 
-// Create a single supabase client for the browser
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// Safely get environment variables with fallbacks
+const getEnvVariable = (key: string): string | undefined => {
+  if (typeof window !== "undefined") {
+    // Client-side
+    return process.env[`NEXT_PUBLIC_${key}`] || process.env[key]
+  } else {
+    // Server-side
+    return process.env[key] || process.env[`NEXT_PUBLIC_${key}`]
+  }
+}
 
 // Create a singleton instance for client-side
 let supabaseInstance: ReturnType<typeof createClient> | null = null
 
 export const getSupabase = () => {
-  if (!supabaseInstance) {
-    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey)
+  // Only create a new instance if one doesn't exist already
+  if (supabaseInstance) return supabaseInstance
+
+  // Get Supabase credentials with validation
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  // Validate credentials before attempting to create client
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error("Supabase URL or Anon Key is missing. Please check your environment variables.", {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseAnonKey,
+    })
+    return createMockClient()
   }
-  return supabaseInstance
+
+  try {
+    // Validate URL format before creating client
+    new URL(supabaseUrl) // This will throw if URL is invalid
+
+    // Create the actual client
+    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey)
+    return supabaseInstance
+  } catch (error) {
+    console.error("Error initializing Supabase client:", error)
+    return createMockClient()
+  }
+}
+
+// Get the site URL dynamically based on environment
+export const getSiteUrl = (): string => {
+  // In production, use the configured site URL
+  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL
+
+  if (configuredUrl) {
+    try {
+      // Validate URL format
+      new URL(configuredUrl)
+      return configuredUrl
+    } catch (e) {
+      console.warn("Invalid NEXT_PUBLIC_SITE_URL format:", configuredUrl)
+      // Continue to fallbacks
+    }
+  }
+
+  // In browser context, use the current origin
+  if (typeof window !== "undefined") {
+    return window.location.origin
+  }
+
+  // In development, use localhost as fallback
+  if (process.env.NODE_ENV === "development") {
+    return "http://localhost:3000"
+  }
+
+  // Last resort fallback
+  console.warn("Could not determine site URL, using empty string")
+  return ""
+}
+
+// Create a mock client that won't throw errors but won't work either
+const createMockClient = () => {
+  console.warn("Using mock Supabase client. Authentication will not work.")
+
+  const mockResponse = { data: null, error: { message: "Supabase client not properly initialized" } }
+
+  return {
+    auth: {
+      getSession: async () => ({ data: { session: null }, error: null }),
+      signUp: async () => mockResponse,
+      signInWithPassword: async () => mockResponse,
+      signOut: async () => mockResponse,
+      resetPasswordForEmail: async () => mockResponse,
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+      getUser: async () => ({ data: { user: null }, error: null }),
+      updateUser: async () => mockResponse,
+      resend: async () => mockResponse,
+    },
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          single: async () => mockResponse,
+        }),
+      }),
+      insert: async () => mockResponse,
+    }),
+  } as any
 }
 
 export const supabase = getSupabase()
 
 export async function signUp(email: string, password: string, userData: { name: string; program: string }) {
   try {
+    const siteUrl = getSiteUrl()
+
+    if (!siteUrl) {
+      throw new Error("Site URL is not configured properly")
+    }
+
     // Sign up the user with Supabase Auth and store user metadata
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
@@ -27,7 +123,7 @@ export async function signUp(email: string, password: string, userData: { name: 
           name: userData.name,
           program: userData.program,
         },
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: `${siteUrl}/dashboard`,
       },
     })
 
@@ -69,8 +165,20 @@ export async function signOut() {
   }
 }
 
-export async function resetPasswordForEmail(email: string, redirectTo: string) {
+// Update the resetPasswordForEmail function to be more robust
+export async function resetPasswordForEmail(email: string) {
   try {
+    const siteUrl = getSiteUrl()
+
+    if (!siteUrl) {
+      throw new Error("Site URL is not configured properly")
+    }
+
+    // Construct the redirect URL
+    const redirectTo = `${siteUrl}/update-password`
+
+    console.log("Password reset redirect URL:", redirectTo)
+
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo,
     })
