@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -11,8 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { supabase, signIn } from "@/lib/supabase"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertCircle, Mail, UserIcon } from "lucide-react"
-import { SupabaseError } from "@/components/supabase-error"
+import { AlertCircle, Mail } from "lucide-react"
 
 export default function SignIn() {
   const router = useRouter()
@@ -23,24 +22,6 @@ export default function SignIn() {
   const [isEmailUnconfirmed, setIsEmailUnconfirmed] = useState(false)
   const [isResendingEmail, setIsResendingEmail] = useState(false)
   const [resendSuccess, setResendSuccess] = useState(false)
-  const [supabaseInitialized, setSupabaseInitialized] = useState(true)
-
-  useEffect(() => {
-    // Check if Supabase is properly initialized
-    const checkSupabase = async () => {
-      try {
-        const { data, error } = await supabase.auth.getSession()
-        if (error && error.message.includes("not properly initialized")) {
-          setSupabaseInitialized(false)
-        }
-      } catch (err) {
-        console.error("Error checking Supabase initialization:", err)
-        setSupabaseInitialized(false)
-      }
-    }
-
-    checkSupabase()
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -102,11 +83,6 @@ export default function SignIn() {
     } finally {
       setIsResendingEmail(false)
     }
-  }
-
-  // If Supabase is not initialized, show error component
-  if (!supabaseInitialized) {
-    return <SupabaseError />
   }
 
   return (
@@ -173,34 +149,28 @@ export default function SignIn() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full p-3 pl-10 border rounded-md"
-                />
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              </div>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full p-3 border rounded-md"
+              />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full p-3 pl-10 border rounded-md"
-                />
-                <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full p-3 border rounded-md"
+              />
             </div>
 
             <Button type="submit" className="w-full bg-black hover:bg-gray-800 text-white py-3" disabled={isLoading}>

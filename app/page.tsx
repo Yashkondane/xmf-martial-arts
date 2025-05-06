@@ -20,26 +20,22 @@ export default function Home() {
           <ImageSlider />
 
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 bg-black/40">
-            <div className="mb-8 pulse">
+            <div className="mb-8">
               <VideoModal />
             </div>
 
-            <h1 className="text-2xl md:text-4xl font-bold mb-2 slide-in-left">
-              XMF – EXTREME MARTIAL ARTS AND FITNESS
-            </h1>
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 slide-in-right">LIVE YOUR BEST LIFE WITH XMF-EXTREME</h2>
-            <p className="max-w-2xl mb-8 text-lg fade-in">
+            <h1 className="text-2xl md:text-4xl font-bold mb-2">XMF – EXTREME MARTIAL ARTS AND FITNESS</h1>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">LIVE YOUR BEST LIFE WITH XMF-EXTREME</h2>
+            <p className="max-w-2xl mb-8 text-lg">
               Unveiling the Art of Martial Arts: A Journey of Discipline, Strength, and Self-Discovery
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 stagger-fade-in">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link href="#programs">
-                <Button className="bg-red-600 hover:bg-red-700 text-white min-w-[200px] btn-animate">
-                  SELECT A PROGRAM
-                </Button>
+                <Button className="bg-red-600 hover:bg-red-700 text-white min-w-[200px]">SELECT A PROGRAM</Button>
               </Link>
               <Link href="/about">
-                <Button variant="outline" className="bg-white text-black hover:bg-gray-100 min-w-[200px] btn-animate">
+                <Button variant="outline" className="bg-white text-black hover:bg-gray-100 min-w-[200px]">
                   LEARN MORE
                 </Button>
               </Link>
@@ -49,7 +45,7 @@ export default function Home() {
 
         <section id="programs" className="py-16 bg-black text-white">
           <div className="container">
-            <h2 className="text-3xl font-bold text-center mb-12 text-animate">Our Programs</h2>
+            <h2 className="text-3xl font-bold text-center mb-12">Our Programs</h2>
 
             <ProgramSection
               title="Taekwon-Do"
