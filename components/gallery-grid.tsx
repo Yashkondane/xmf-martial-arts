@@ -4,6 +4,7 @@ import { useState } from "react"
 import Image from "next/image"
 import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { ImageHover } from "@/components/image-hover"
 
 // Gallery images (placeholders for now)
 const galleryImages = [
@@ -83,13 +84,13 @@ export function GalleryGrid() {
   return (
     <div>
       {/* Category Filter */}
-      <div className="flex flex-wrap justify-center gap-2 mb-8">
+      <div className="flex flex-wrap justify-center gap-1 md:gap-2 mb-6 md:mb-8">
         {categories.map((category) => (
           <button
             key={category}
             onClick={() => setActiveCategory(category)}
             className={cn(
-              "px-4 py-2 rounded-md transition-colors",
+              "px-2 py-1 md:px-4 md:py-2 rounded-md transition-colors text-xs md:text-sm",
               activeCategory === category ? "bg-red-600 text-white" : "bg-gray-800 text-gray-300 hover:bg-gray-700",
             )}
           >
@@ -99,24 +100,26 @@ export function GalleryGrid() {
       </div>
 
       {/* Gallery Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
         {filteredImages.map((image, index) => (
           <div
             key={index}
-            className="relative aspect-square overflow-hidden rounded-lg cursor-pointer group"
+            className="aspect-square overflow-hidden rounded-lg cursor-pointer"
             onClick={() => setSelectedImage(index)}
           >
-            <Image
+            <ImageHover
               src={image.src || "/placeholder.svg"}
               alt={image.alt}
               fill
-              className="object-cover transition-transform duration-300 group-hover:scale-110"
+              className="h-full w-full"
+              effect="zoom"
+              overlayContent={
+                <div className="text-center text-white p-4">
+                  <p className="font-medium">{image.alt}</p>
+                  <span className="text-sm text-red-400">{image.category}</span>
+                </div>
+              }
             />
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity flex items-center justify-center">
-              <p className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-center p-4">
-                {image.alt}
-              </p>
-            </div>
             <div className="absolute bottom-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
               {image.category}
             </div>

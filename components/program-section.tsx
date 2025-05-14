@@ -1,5 +1,6 @@
-import Image from "next/image"
 import { cn } from "@/lib/utils"
+import { TextAnimation } from "@/components/text-animation"
+import { ImageHover } from "@/components/image-hover"
 
 interface ProgramSectionProps {
   title: string
@@ -10,13 +11,25 @@ interface ProgramSectionProps {
 
 export function ProgramSection({ title, description, imageUrl, reverse = false }: ProgramSectionProps) {
   return (
-    <div className={cn("flex flex-col md:flex-row items-center gap-8 mb-16", reverse && "md:flex-row-reverse")}>
-      <div className="flex-1">
-        <h3 className="text-2xl font-bold mb-4 text-white">{title}</h3>
-        <p className="text-gray-300">{description}</p>
+    <div className={cn("flex flex-col md:flex-row items-center gap-8 mb-16 py-8", reverse && "md:flex-row-reverse")}>
+      <div className="flex-1 w-full">
+        <TextAnimation text={title} type="highlight" className="text-2xl font-bold mb-4 text-white" />
+        <TextAnimation text={description} type="fade" className="text-gray-300" delay={0.3} />
       </div>
-      <div className="flex-1 relative h-64 md:h-80 w-full overflow-hidden rounded-lg border border-red-600">
-        <Image src={imageUrl || "/placeholder.svg"} alt={title} fill className="object-cover" />
+      <div className="flex-1 h-64 md:h-80 w-full mt-6 md:mt-0">
+        <ImageHover
+          src={imageUrl || "/placeholder.svg"}
+          alt={title}
+          fill
+          className="rounded-lg border border-red-600 h-full"
+          effect="zoom"
+          overlayContent={
+            <div className="text-center text-white p-4">
+              <h3 className="text-xl font-bold mb-2">{title}</h3>
+              <p className="text-sm">Click to learn more</p>
+            </div>
+          }
+        />
       </div>
     </div>
   )

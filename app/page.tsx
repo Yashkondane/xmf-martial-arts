@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button"
 import { InstructorCarousel } from "@/components/instructor-carousel"
 import { AchievementsSection } from "@/components/achievements-section"
 import { TestimonialsSection } from "@/components/testimonials-section"
+import { TextAnimation } from "@/components/text-animation"
 import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
@@ -24,11 +24,25 @@ export default function Home() {
               <VideoModal />
             </div>
 
-            <h1 className="text-2xl md:text-4xl font-bold mb-2">XMF – EXTREME MARTIAL ARTS AND FITNESS</h1>
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">LIVE YOUR BEST LIFE WITH XMF-EXTREME</h2>
-            <p className="max-w-2xl mb-8 text-lg">
-              Unveiling the Art of Martial Arts: A Journey of Discipline, Strength, and Self-Discovery
-            </p>
+            <TextAnimation
+              text="XMF – EXTREME MARTIAL ARTS AND FITNESS"
+              type="fade"
+              className="text-2xl md:text-4xl font-bold mb-2"
+            />
+
+            <TextAnimation
+              text="LIVE YOUR BEST LIFE WITH XMF-EXTREME"
+              type="reveal"
+              className="text-3xl md:text-5xl font-bold mb-4"
+              delay={0.3}
+            />
+
+            <TextAnimation
+              text="Unveiling the Art of Martial Arts: A Journey of Discipline, Strength, and Self-Discovery"
+              type="fade"
+              className="max-w-2xl mb-8 text-lg"
+              delay={0.6}
+            />
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="#programs">
@@ -45,7 +59,7 @@ export default function Home() {
 
         <section id="programs" className="py-16 bg-black text-white">
           <div className="container">
-            <h2 className="text-3xl font-bold text-center mb-12">Our Programs</h2>
+            <TextAnimation text="Our Programs" type="highlight" className="text-3xl font-bold text-center mb-12" />
 
             <ProgramSection
               title="Taekwon-Do"
@@ -82,8 +96,6 @@ export default function Home() {
           <ContactSection />
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }

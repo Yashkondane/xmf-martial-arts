@@ -2,9 +2,9 @@
 
 import { useState } from "react"
 import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
 import { ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { TextAnimation } from "@/components/text-animation"
 
 // FAQ data structure
 interface FAQ {
@@ -128,10 +128,14 @@ export default function FAQsPage() {
       <Navbar />
 
       <main className="flex-1 bg-black text-white">
-        <div className="container py-16">
-          <h1 className="text-4xl font-bold text-center mb-12">Frequently Asked Questions</h1>
+        <div className="container py-8 md:py-16">
+          <TextAnimation
+            text="Frequently Asked Questions"
+            type="gradient"
+            className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12"
+          />
 
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-3xl mx-auto px-2 md:px-0">
             {faqData.map((categoryData) => (
               <div key={categoryData.category} className="mb-6">
                 <button
@@ -178,8 +182,6 @@ export default function FAQsPage() {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   )
 }

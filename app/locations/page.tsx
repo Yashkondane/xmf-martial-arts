@@ -2,9 +2,9 @@
 
 import { useState } from "react"
 import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
 import { MapPin, Phone, ExternalLink } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { TextAnimation } from "@/components/text-animation"
 
 // Branch data
 const branches = [
@@ -50,10 +50,14 @@ export default function LocationsPage() {
       <Navbar />
 
       <main className="flex-1 bg-black text-white">
-        <div className="container py-16">
-          <h1 className="text-4xl font-bold text-center mb-12">Our Locations</h1>
+        <div className="container py-8 md:py-16">
+          <TextAnimation
+            text="Our Locations"
+            type="gradient"
+            className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12"
+          />
 
-          <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
             {/* Left Panel - Branch List */}
             <div className="w-full lg:w-2/5">
               <div className="bg-gray-900 rounded-lg overflow-hidden">
@@ -82,7 +86,7 @@ export default function LocationsPage() {
             {/* Right Panel - Branch Details */}
             <div className="w-full lg:w-3/5">
               <div className="bg-gray-900 rounded-lg p-6">
-                <h2 className="text-2xl font-bold mb-6">{selectedBranch.name}</h2>
+                <TextAnimation text={selectedBranch.name} type="highlight" className="text-2xl font-bold mb-6" />
 
                 <div className="space-y-6">
                   <div className="flex items-start gap-3">
@@ -119,8 +123,6 @@ export default function LocationsPage() {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   )
 }

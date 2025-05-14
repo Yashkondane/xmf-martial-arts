@@ -7,12 +7,14 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Menu, User } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import { motion } from "framer-motion"
 
 export function Navbar() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     const checkUser = async () => {
@@ -27,8 +29,19 @@ export function Navbar() {
       setUser(session?.user || null)
     })
 
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolled(true)
+      } else {
+        setScrolled(false)
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll)
+
     return () => {
       authListener.subscription.unsubscribe()
+      window.removeEventListener("scroll", handleScroll)
     }
   }, [])
 
@@ -42,120 +55,186 @@ export function Navbar() {
     return null
   }
 
+  const navVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        staggerChildren: 0.1,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: { opacity: 1, y: 0 },
+  }
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <motion.header
+      initial="hidden"
+      animate="visible"
+      variants={navVariants}
+      className={`sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300 ${
+        scrolled ? "bg-background/95 shadow-md" : "bg-background/80"
+      }`}
+    >
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/images/xmf-logo-white-bg.jpeg"
-            alt="XMF Logo"
-            width={40}
-            height={40}
-            className="h-10 w-10 rounded-full"
-          />
-          <span className="text-xl font-bold">XMF-EXTREME</span>
+        <Link href="/" className="flex items-center gap-2 group">
+          <motion.div
+            className="relative h-10 w-10 overflow-hidden rounded-full"
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <Image src="/images/xmf-logo-white-bg.jpeg" alt="XMF Logo" fill className="object-cover" />
+          </motion.div>
+          <motion.span className="text-xl font-bold" whileHover={{ color: "#dc2626" }}>
+            XMF-EXTREME
+          </motion.span>
         </Link>
 
         {/* Mobile menu button */}
-        <button className="md:hidden p-2" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
+        <motion.button
+          className="md:hidden p-2"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle menu"
+          whileTap={{ scale: 0.9 }}
+        >
           <Menu className="h-6 w-6" />
-        </button>
+        </motion.button>
 
         {/* Desktop navigation */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <Link href="/" className="transition-colors hover:text-foreground/80">
-            Home
-          </Link>
-          <Link href="/about" className="transition-colors hover:text-foreground/80">
-            About XMF
-          </Link>
-          <Link href="/#programs" className="transition-colors hover:text-foreground/80">
-            Programs
-          </Link>
-          <Link href="/gallery" className="transition-colors hover:text-foreground/80">
-            Gallery
-          </Link>
-          <Link href="/locations" className="transition-colors hover:text-foreground/80">
-            Our Locations
-          </Link>
-          <Link href="/faqs" className="transition-colors hover:text-foreground/80">
-            FAQs
-          </Link>
-          <Link href="/#contact" className="transition-colors hover:text-foreground/80">
-            Contact Us
-          </Link>
-        </nav>
+        <motion.nav className="hidden md:flex items-center gap-6 text-sm font-medium" variants={navVariants}>
+          {[
+            { href: "/", label: "Home" },
+            { href: "/about", label: "About XMF" },
+            { href: "/#programs", label: "Programs" },
+            { href: "/gallery", label: "Gallery" },
+            { href: "/locations", label: "Our Locations" },
+            { href: "/faqs", label: "FAQs" },
+            { href: "/#contact", label: "Contact Us" },
+          ].map((link) => (
+            <motion.div key={link.href} variants={itemVariants}>
+              <Link href={link.href} className="nav-link relative">
+                {link.label}
+                {pathname === link.href && (
+                  <motion.span
+                    className="absolute bottom-0 left-0 h-0.5 w-full bg-red-600"
+                    layoutId="navbar-underline"
+                  />
+                )}
+              </Link>
+            </motion.div>
+          ))}
+        </motion.nav>
 
         {/* Sign in/up buttons or user profile */}
         {!loading && (
-          <div className="hidden md:flex items-center gap-4">
+          <motion.div className="hidden md:flex items-center gap-4" variants={navVariants}>
             {user ? (
               <Link href="/dashboard">
-                <Button variant="outline" className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  Dashboard
-                </Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button variant="outline" className="flex items-center gap-2 button-hover">
+                    <User className="h-4 w-4" />
+                    Dashboard
+                  </Button>
+                </motion.div>
               </Link>
             ) : (
               <>
                 <Link href="/signin">
-                  <Button variant="outline">Sign In</Button>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button variant="outline" className="button-hover">
+                      Sign In
+                    </Button>
+                  </motion.div>
                 </Link>
                 <Link href="/signup">
-                  <Button className="bg-red-600 hover:bg-red-700 text-white">Sign Up</Button>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button className="bg-red-600 hover:bg-red-700 text-white button-hover">Sign Up</Button>
+                  </motion.div>
                 </Link>
               </>
             )}
-          </div>
+          </motion.div>
         )}
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="absolute top-16 left-0 right-0 bg-background border-b md:hidden">
+          <motion.div
+            className="absolute top-16 left-0 right-0 bg-background border-b md:hidden"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+          >
             <nav className="flex flex-col p-4">
-              <Link href="/" className="py-2 hover:text-foreground/80" onClick={() => setIsMenuOpen(false)}>
-                Home
-              </Link>
-              <Link href="/about" className="py-2 hover:text-foreground/80" onClick={() => setIsMenuOpen(false)}>
-                About XMF
-              </Link>
-              <Link href="/#programs" className="py-2 hover:text-foreground/80" onClick={() => setIsMenuOpen(false)}>
-                Programs
-              </Link>
-              <Link href="/gallery" className="py-2 hover:text-foreground/80" onClick={() => setIsMenuOpen(false)}>
-                Gallery
-              </Link>
-              <Link href="/locations" className="py-2 hover:text-foreground/80" onClick={() => setIsMenuOpen(false)}>
-                Our Locations
-              </Link>
-              <Link href="/faqs" className="py-2 hover:text-foreground/80" onClick={() => setIsMenuOpen(false)}>
-                FAQs
-              </Link>
-              <Link href="/#contact" className="py-2 hover:text-foreground/80" onClick={() => setIsMenuOpen(false)}>
-                Contact Us
-              </Link>
+              {[
+                { href: "/", label: "Home" },
+                { href: "/about", label: "About XMF" },
+                { href: "/#programs", label: "Programs" },
+                { href: "/gallery", label: "Gallery" },
+                { href: "/locations", label: "Our Locations" },
+                { href: "/faqs", label: "FAQs" },
+                { href: "/#contact", label: "Contact Us" },
+              ].map((link, index) => (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Link
+                    href={link.href}
+                    className="py-2 block hover:text-red-600 transition-colors duration-300"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
+              ))}
               <div className="flex flex-col gap-2 mt-4">
                 {user ? (
-                  <Link href="/dashboard" onClick={() => setIsMenuOpen(false)}>
-                    <Button className="w-full bg-red-600 hover:bg-red-700 text-white">Dashboard</Button>
-                  </Link>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                  >
+                    <Link href="/dashboard" onClick={() => setIsMenuOpen(false)}>
+                      <Button className="w-full bg-red-600 hover:bg-red-700 text-white button-hover">Dashboard</Button>
+                    </Link>
+                  </motion.div>
                 ) : (
                   <>
-                    <Link href="/signin" onClick={() => setIsMenuOpen(false)}>
-                      <Button variant="outline" className="w-full">
-                        Sign In
-                      </Button>
-                    </Link>
-                    <Link href="/signup" onClick={() => setIsMenuOpen(false)}>
-                      <Button className="w-full bg-red-600 hover:bg-red-700 text-white">Sign Up</Button>
-                    </Link>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.7 }}
+                    >
+                      <Link href="/signin" onClick={() => setIsMenuOpen(false)}>
+                        <Button variant="outline" className="w-full button-hover">
+                          Sign In
+                        </Button>
+                      </Link>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.8 }}
+                    >
+                      <Link href="/signup" onClick={() => setIsMenuOpen(false)}>
+                        <Button className="w-full bg-red-600 hover:bg-red-700 text-white button-hover">Sign Up</Button>
+                      </Link>
+                    </motion.div>
                   </>
                 )}
               </div>
             </nav>
-          </div>
+          </motion.div>
         )}
       </div>
-    </header>
+    </motion.header>
   )
 }

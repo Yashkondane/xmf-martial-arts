@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { TextAnimation } from "@/components/text-animation"
 
 // Testimonial data
 const testimonials = [
@@ -60,7 +61,7 @@ export function TestimonialsSection() {
   return (
     <section className="py-16 bg-black text-white">
       <div className="container">
-        <h2 className="text-3xl font-bold text-center mb-12">Our Clients Say</h2>
+        <TextAnimation text="Our Clients Say" type="flip" className="text-3xl font-bold text-center mb-12" />
 
         <div className="relative max-w-4xl mx-auto">
           {/* Testimonial Slider */}
@@ -81,8 +82,17 @@ export function TestimonialsSection() {
                           className="object-cover"
                         />
                       </div>
-                      <p className="text-gray-300 text-center italic mb-6 max-w-2xl">"{testimonial.quote}"</p>
-                      <h3 className="text-xl font-bold">{testimonial.name}</h3>
+                      <TextAnimation
+                        text={`"${testimonial.quote}"`}
+                        type="fade"
+                        className="text-gray-300 text-center italic mb-6 max-w-2xl"
+                      />
+                      <TextAnimation
+                        text={testimonial.name}
+                        type="highlight"
+                        className="text-xl font-bold"
+                        delay={0.3}
+                      />
                     </div>
                   </div>
                 ))}
@@ -93,18 +103,18 @@ export function TestimonialsSection() {
           {/* Navigation Arrows */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors"
+            className="absolute -left-2 md:left-0 top-1/2 -translate-y-1/2 p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors z-10"
             aria-label="Previous testimonial"
           >
-            <ChevronLeft className="h-6 w-6" />
+            <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
           </button>
 
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors"
+            className="absolute -right-2 md:right-0 top-1/2 -translate-y-1/2 p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors z-10"
             aria-label="Next testimonial"
           >
-            <ChevronRight className="h-6 w-6" />
+            <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
           </button>
 
           {/* Dot Navigation */}

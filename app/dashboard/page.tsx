@@ -6,8 +6,6 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { supabase, getUserProfile, signOut } from "@/lib/supabase"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -76,7 +74,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      {/* Removed the duplicate Navbar component from here */}
 
       <main className="flex-1 bg-gray-50">
         <div className="container py-8">
@@ -383,7 +381,7 @@ export default function Dashboard() {
         </div>
       </main>
 
-      <Footer />
+      {/* Removed the duplicate Footer component from here */}
     </div>
   )
 }
