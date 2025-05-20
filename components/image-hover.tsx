@@ -218,3 +218,6 @@ export function ImageHover({
     </div>
   )
 }
+
+// Make sure to add a default export
+export default ImageHover

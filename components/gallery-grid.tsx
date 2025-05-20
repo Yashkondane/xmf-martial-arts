@@ -4,7 +4,7 @@ import { useState } from "react"
 import Image from "next/image"
 import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { ImageHover } from "@/components/image-hover"
+import ImageHover from "@/components/image-hover"
 
 // Gallery images (placeholders for now)
 const galleryImages = [

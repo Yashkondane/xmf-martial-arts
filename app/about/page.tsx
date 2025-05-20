@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Navbar } from "@/components/navbar"
 import { TextAnimation } from "@/components/text-animation"
-import { ImageHover } from "@/components/image-hover"
+import ImageHover from "@/components/image-hover"
 
 export default function About() {
   return (

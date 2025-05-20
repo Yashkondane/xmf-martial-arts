@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 import { TextAnimation } from "@/components/text-animation"
-import { ImageHover } from "@/components/image-hover"
+import ImageHover from "@/components/image-hover"
 
 interface ProgramSectionProps {
   title: string
