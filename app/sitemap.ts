@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://xmf-extreme.com"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.xmf.co.in"
 
   // Get current date for lastModified
   const currentDate = new Date()
