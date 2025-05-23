@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.xmf.co.in"
+  // Make sure this is exactly your production domain
+  const baseUrl = "https://www.xmf.co.in"
 
   // Get current date for lastModified
   const currentDate = new Date()
@@ -37,6 +38,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
-    // Authentication pages are intentionally excluded as they shouldn't be indexed
   ]
 }

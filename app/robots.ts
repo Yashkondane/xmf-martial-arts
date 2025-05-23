@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next"
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.xmf.co.in"
+  // Make sure this is exactly your production domain
+  const baseUrl = "https://www.xmf.co.in"
 
   return {
     rules: {
