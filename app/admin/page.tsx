@@ -2,10 +2,10 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { useEffect, useState } from "react"
-import { getAllProfiles } from "@/lib/supabase-admin"
+import { getAllProfiles } from "@/lib/supabase-admin" // Import the server-side function
 import { UsersIcon } from "lucide-react"
 
-const AdminPage = () => {
+export default function AdminDashboardPage() {
   const [totalUsers, setTotalUsers] = useState(0)
   const [adminUsers, setAdminUsers] = useState(0)
   const [regularUsers, setRegularUsers] = useState(0)
@@ -92,5 +92,3 @@ const AdminPage = () => {
     </div>
   )
 }
-
-export default AdminPage

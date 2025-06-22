@@ -32,7 +32,7 @@ export default function AdminEventsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null)
   const [form, setForm] = useState({ title: "", description: "", date: "", time: "", location: "" })
-  // const supabase = createClient() // No longer needed, using imported 'supabase'
+  // Removed: const supabase = createClient() as it's now imported directly
   const { toast } = useToast()
 
   const fetchEvents = async () => {
