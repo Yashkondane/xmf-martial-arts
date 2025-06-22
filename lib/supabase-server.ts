@@ -1,20 +1,32 @@
-import { createServerClient } from "@supabase/ssr"
+import { createServerClient as createClient } from "@supabase/auth-helpers-nextjs"
 import { cookies } from "next/headers"
-import { cache } from "react"
 
-export const createClient = cache(() => {
+export function createServerClient() {
   const cookieStore = cookies()
-  return createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
+
+  return createClient({
+    supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     cookies: {
       get(name: string) {
         return cookieStore.get(name)?.value
       },
       set(name: string, value: string, options: any) {
-        cookieStore.set(name, value, options)
+        try {
+          cookieStore.set({ name, value, ...options })
+        } catch (error) {
+          // The `cookies().set()` method can only be called in a Server Context.
+          // We're only interested in deleting the cookie and not setting it.
+        }
       },
       remove(name: string, options: any) {
-        cookieStore.set(name, "", options)
+        try {
+          cookieStore.set({ name, value: "", ...options })
+        } catch (error) {
+          // The `cookies().set()` method can only be called in a Server Context.
+          // We're only interested in deleting the cookie and not setting it.
+        }
       },
     },
   })
-})
+}

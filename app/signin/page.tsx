@@ -41,8 +41,12 @@ export default function SignIn() {
           throw signInError
         }
       } else if (user) {
-        // Redirect to dashboard after successful sign in
-        router.push("/dashboard")
+        // Check if the signed-in user is the admin
+        if (user.email === "kashyash48@gmail.com") {
+          router.push("/admin") // Redirect to admin dashboard
+        } else {
+          router.push("/dashboard") // Redirect to regular dashboard
+        }
       }
     } catch (err: any) {
       let errorMessage = "Failed to sign in. Please check your credentials."

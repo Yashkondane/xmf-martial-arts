@@ -112,7 +112,6 @@ export default function Dashboard() {
                       {profile?.program === "taekwondo" && "Korean martial art focused on kicking techniques"}
                       {profile?.program === "bostaff" && "Ancient weapon training for coordination and strength"}
                       {profile?.program === "calisthenics" && "Bodyweight exercises for functional strength"}
-                      {profile?.belt && ` • Current Belt: ${profile.belt}`}
                     </p>
                   </CardContent>
                 </Card>
@@ -353,10 +352,6 @@ export default function Dashboard() {
                             <Label htmlFor="email">Email Address</Label>
                             <Input id="email" defaultValue={user?.email} className="mt-1" disabled />
                           </div>
-                          <div>
-                            <Label htmlFor="phone_number">Phone Number</Label>
-                            <Input id="phone_number" defaultValue={profile?.phone_number} className="mt-1" />
-                          </div>
                         </div>
                       </div>
 
@@ -366,10 +361,6 @@ export default function Dashboard() {
                           <div>
                             <Label htmlFor="program">Current Program</Label>
                             <Input id="program" defaultValue={profile?.program} className="mt-1 capitalize" disabled />
-                          </div>
-                          <div>
-                            <Label htmlFor="belt">Current Belt</Label>
-                            <Input id="belt" defaultValue={profile?.belt} className="mt-1 capitalize" disabled />
                           </div>
                           <div>
                             <Label htmlFor="membership">Membership Type</Label>
