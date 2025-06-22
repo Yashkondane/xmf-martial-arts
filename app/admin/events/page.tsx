@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useState, useEffect } from "react"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase" // Corrected import path
 import { useToast } from "@/hooks/use-toast"
 
 interface Event {
@@ -32,7 +32,7 @@ export default function AdminEventsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null)
   const [form, setForm] = useState({ title: "", description: "", date: "", time: "", location: "" })
-  const supabase = createClient()
+  // const supabase = createClient() // No longer needed, using imported 'supabase'
   const { toast } = useToast()
 
   const fetchEvents = async () => {
