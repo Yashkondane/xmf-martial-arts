@@ -13,6 +13,7 @@
     "@radix-ui/react-dialog": "latest",
     "@radix-ui/react-label": "latest",
     "@radix-ui/react-radio-group": "latest",
+    "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-slot": "latest",
     "@radix-ui/react-tabs": "latest",
     "@supabase/ssr": "latest",
