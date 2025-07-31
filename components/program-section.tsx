@@ -16,13 +16,16 @@ export function ProgramSection({ title, description, imageUrl, reverse = false }
         <TextAnimation text={title} type="highlight" className="text-2xl font-bold mb-4 text-white" />
         <TextAnimation text={description} type="fade" className="text-gray-300" delay={0.3} />
       </div>
-      <div className="flex-1 h-64 md:h-80 w-full mt-6 md:mt-0">
+      <div className="flex-1 h-64 md:h-80 w-full mt-6 md:mt-0 bg-black">
+        {" "}
+        {/* Added bg-black for consistent background */}
         <ImageHover
           src={imageUrl || "/placeholder.svg"}
           alt={title}
           fill
-          className="rounded-lg h-full" // Removed border border-red-600
+          className="rounded-lg h-full"
           effect="zoom"
+          objectFit="contain" // Explicitly set objectFit to contain
           overlayContent={
             <div className="text-center text-white p-4">
               <h3 className="text-xl font-bold mb-2">{title}</h3>

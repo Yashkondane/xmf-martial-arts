@@ -7,7 +7,7 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
-type HoverEffectType = "zoom" | "overlay" | "slide" | "flip" | "tilt" | "reveal" | "blur"
+type HoverEffectType = "zoom" | "overlay" | "slide" | "flip" | "tilt" | "reveal" | "blur" | "grayscale" | "none"
 
 interface ImageHoverProps {
   src: string
@@ -21,6 +21,7 @@ interface ImageHoverProps {
   priority?: boolean
   fill?: boolean
   onClick?: () => void
+  objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down" // Added objectFit prop
 }
 
 export function ImageHover({
@@ -30,11 +31,12 @@ export function ImageHover({
   height,
   className = "",
   imageClassName = "",
-  effect = "zoom",
+  effect = "none",
   overlayContent,
   priority = false,
   fill = false,
   onClick,
+  objectFit, // Destructure objectFit
 }: ImageHoverProps) {
   const [isHovered, setIsHovered] = useState(false)
 
@@ -49,7 +51,9 @@ export function ImageHover({
     "transition-all duration-500 object-cover",
     effect === "zoom" && "hover:scale-110",
     effect === "blur" && "hover:scale-105",
+    effect === "grayscale" && "hover:grayscale",
     imageClassName,
+    objectFit ? `object-${objectFit}` : fill ? "object-cover" : "object-contain", // Use objectFit prop, fallback to fill logic
   )
 
   // Overlay variants
@@ -156,7 +160,6 @@ export function ImageHover({
             fill={fill}
           />
           {overlayContent && (
-            // Update the overlay content for better mobile display
             <motion.div
               className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center p-2 md:p-4 text-center"
               initial="hidden"
@@ -191,6 +194,28 @@ export function ImageHover({
             </motion.div>
           )}
         </>
+      ) : effect === "grayscale" ? (
+        <div className="relative group">
+          <Image
+            src={src || "/placeholder.svg"}
+            alt={alt}
+            width={width}
+            height={height}
+            className={imageClasses}
+            priority={priority}
+            fill={fill}
+          />
+          {overlayContent && (
+            <div
+              className={cn(
+                "absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300",
+                isHovered ? "opacity-100" : "opacity-0",
+              )}
+            >
+              {overlayContent}
+            </div>
+          )}
+        </div>
       ) : (
         <>
           <Image
@@ -203,7 +228,6 @@ export function ImageHover({
             fill={fill}
           />
           {overlayContent && (
-            // Update the overlay content for better mobile display
             <motion.div
               className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center p-2 md:p-4 text-center"
               initial="hidden"
