@@ -4,9 +4,9 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 
 const images = [
-  "/images/slider-1.jpg", // New group photo with better composition
+  "/images/slider-1.jpg", // New group photo with confident poses
   "/images/slider-2.jpg", // Close-up of Taekwon-Do belts
-  "/images/slider-3.jpg", // Female student performing high kick
+  "/images/slider-3.jpg", // New female student high kick technique
   "/images/slider-4.jpg", // Male student performing jumping split kick
 ]
 
