@@ -3,12 +3,7 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
-const images = [
-  "/images/slider-1.jpg", // New group photo with confident poses
-  "/images/slider-2.jpg", // Close-up of Taekwon-Do belts
-  "/images/slider-3.jpg", // New female student high kick technique
-  "/images/slider-4.jpg", // Male student performing jumping split kick
-]
+const images = ["/images/slider-1.jpg", "/images/slider-2.jpg", "/images/slider-3.jpg", "/images/slider-4.jpg"]
 
 export function ImageSlider() {
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -22,7 +17,7 @@ export function ImageSlider() {
   }, [])
 
   return (
-    <div className="relative h-full w-full overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden">
       {images.map((image, index) => (
         <div
           key={index}
@@ -32,7 +27,7 @@ export function ImageSlider() {
         >
           <Image
             src={image || "/placeholder.svg"}
-            alt={`XMF Martial Arts slide ${index + 1}`}
+            alt={`Slide ${index + 1}`}
             fill
             className="object-cover"
             priority={index === 0}

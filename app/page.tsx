@@ -64,20 +64,20 @@ export default function Home() {
             <ProgramSection
               title="Taekwon-Do"
               description="Taekwon-Do is a Korean martial art characterized by its emphasis on head-height kicks, jumping and spinning kicks, and fast kicking techniques. Though training in Taekwon-Do will provide you with an effective method of self-defense, this is only one of its many facets. It is also an art, a way of life, and a sport."
-              imageUrl="/placeholder.svg?height=400&width=600"
+              imageUrl="/images/program-taekwondo.jpg"
             />
 
             <ProgramSection
               title="Bo-Staff"
               description="Bo-Staff training is an ancient martial art weapon practice that enhances coordination, strength, and focus. Our Bo-Staff program teaches traditional techniques combined with modern applications, helping students develop precision, discipline, and a deeper connection to martial arts heritage."
-              imageUrl="/placeholder.svg?height=400&width=600"
+              imageUrl="/images/program-bo-staff.jpg"
               reverse
             />
 
             <ProgramSection
               title="Calisthenics"
               description="Our Calisthenics program focuses on building functional strength, flexibility, and endurance using bodyweight exercises. This training complements martial arts practice by developing core stability, improving movement patterns, and enhancing overall physical conditioning without the need for equipment."
-              imageUrl="/placeholder.svg?height=400&width=600"
+              imageUrl="/images/program-calisthenics.jpg"
             />
           </div>
         </section>

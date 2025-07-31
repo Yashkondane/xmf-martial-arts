@@ -21,7 +21,7 @@ export function ProgramSection({ title, description, imageUrl, reverse = false }
           src={imageUrl || "/placeholder.svg"}
           alt={title}
           fill
-          className="rounded-lg border border-red-600 h-full"
+          className="rounded-lg h-full" // Removed border border-red-600
           effect="zoom"
           overlayContent={
             <div className="text-center text-white p-4">
