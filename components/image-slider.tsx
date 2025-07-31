@@ -4,12 +4,10 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 
 const images = [
-  "/placeholder.svg?height=800&width=1200",
-  "/placeholder.svg?height=800&width=1200",
-  "/placeholder.svg?height=800&width=1200",
-  "/placeholder.svg?height=800&width=1200",
-  "/placeholder.svg?height=800&width=1200",
-  "/placeholder.svg?height=800&width=1200",
+  "/images/slider-1.jpg", // New group photo with better composition
+  "/images/slider-2.jpg", // Close-up of Taekwon-Do belts
+  "/images/slider-3.jpg", // Female student performing high kick
+  "/images/slider-4.jpg", // Male student performing jumping split kick
 ]
 
 export function ImageSlider() {
@@ -34,7 +32,7 @@ export function ImageSlider() {
         >
           <Image
             src={image || "/placeholder.svg"}
-            alt={`Martial arts slide ${index + 1}`}
+            alt={`XMF Martial Arts slide ${index + 1}`}
             fill
             className="object-cover"
             priority={index === 0}
