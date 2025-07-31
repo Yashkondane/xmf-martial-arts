@@ -1,7 +1,7 @@
 import Link from "next/link"
+import Image from "next/image" // Import Image component
 import { ImageSlider } from "@/components/image-slider"
 import { VideoModal } from "@/components/video-modal"
-import { ProgramSection } from "@/components/program-section"
 import { ContactSection } from "@/components/contact-section"
 import { Button } from "@/components/ui/button"
 import { InstructorCarousel } from "@/components/instructor-carousel"
@@ -58,27 +58,71 @@ export default function Home() {
         </section>
 
         <section id="programs" className="py-16 bg-black text-white">
-          <div className="container">
+          <div className="container mx-auto px-4 md:px-6">
             <TextAnimation text="Our Programs" type="highlight" className="text-3xl font-bold text-center mb-12" />
 
-            <ProgramSection
-              title="Taekwon-Do"
-              description="Taekwon-Do is a Korean martial art characterized by its emphasis on head-height kicks, jumping and spinning kicks, and fast kicking techniques. Though training in Taekwon-Do will provide you with an effective method of self-defense, this is only one of its many facets. It is also an art, a way of life, and a sport."
-              imageUrl="/images/program-taekwondo.jpg"
-            />
+            {/* Taekwon-Do Program */}
+            <div className="grid md:grid-cols-2 gap-8 items-center mb-16">
+              <div className="space-y-4 fade-in">
+                <TextAnimation text="Taekwon-Do" type="highlight" className="text-2xl font-bold mb-4 text-white" />
+                <TextAnimation
+                  text="Taekwon-Do is a Korean martial art characterized by its emphasis on head-height kicks, jumping and spinning kicks, and fast kicking techniques. Though training in Taekwon-Do will provide you with an effective method of self-defense, this is only one of its many facets. It is also an art, a way of life, and a sport."
+                  type="fade"
+                  className="text-gray-300"
+                  delay={0.3}
+                />
+              </div>
+              <div className="relative h-64 md:h-96 w-full overflow-hidden rounded-lg bg-black fade-in-delay-1">
+                <Image
+                  src="/images/program-taekwondo.jpg"
+                  alt="Taekwon-Do Program"
+                  fill
+                  className="object-contain object-center"
+                />
+              </div>
+            </div>
 
-            <ProgramSection
-              title="Bo-Staff"
-              description="Bo-Staff training is an ancient martial art weapon practice that enhances coordination, strength, and focus. Our Bo-Staff program teaches traditional techniques combined with modern applications, helping students develop precision, discipline, and a deeper connection to martial arts heritage."
-              imageUrl="/images/program-bo-staff.jpg"
-              reverse
-            />
+            {/* Bo-Staff Program */}
+            <div className="grid md:grid-cols-2 gap-8 items-center mb-16 md:flex-row-reverse">
+              <div className="space-y-4 fade-in">
+                <TextAnimation text="Bo-Staff" type="highlight" className="text-2xl font-bold mb-4 text-white" />
+                <TextAnimation
+                  text="Bo-Staff training is an ancient martial art weapon practice that enhances coordination, strength, and focus. Our Bo-Staff program teaches traditional techniques combined with modern applications, helping students develop precision, discipline, and a deeper connection to martial arts heritage."
+                  type="fade"
+                  className="text-gray-300"
+                  delay={0.3}
+                />
+              </div>
+              <div className="relative h-64 md:h-96 w-full overflow-hidden rounded-lg bg-black fade-in-delay-1">
+                <Image
+                  src="/images/program-bo-staff.jpg"
+                  alt="Bo-Staff Program"
+                  fill
+                  className="object-contain object-center"
+                />
+              </div>
+            </div>
 
-            <ProgramSection
-              title="Calisthenics"
-              description="Our Calisthenics program focuses on building functional strength, flexibility, and endurance using bodyweight exercises. This training complements martial arts practice by developing core stability, improving movement patterns, and enhancing overall physical conditioning without the need for equipment."
-              imageUrl="/images/program-calisthenics.jpg"
-            />
+            {/* Calisthenics Program */}
+            <div className="grid md:grid-cols-2 gap-8 items-center mb-16">
+              <div className="space-y-4 fade-in">
+                <TextAnimation text="Calisthenics" type="highlight" className="text-2xl font-bold mb-4 text-white" />
+                <TextAnimation
+                  text="Our Calisthenics program focuses on building functional strength, flexibility, and endurance using bodyweight exercises. This training complements martial arts practice by developing core stability, improving movement patterns, and enhancing overall physical conditioning without the need for equipment."
+                  type="fade"
+                  className="text-gray-300"
+                  delay={0.3}
+                />
+              </div>
+              <div className="relative h-64 md:h-96 w-full overflow-hidden rounded-lg bg-black fade-in-delay-1">
+                <Image
+                  src="/images/program-calisthenics.jpg"
+                  alt="Calisthenics Program"
+                  fill
+                  className="object-contain object-center"
+                />
+              </div>
+            </div>
           </div>
         </section>
 

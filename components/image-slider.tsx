@@ -3,7 +3,12 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
-const images = ["/images/slider-1.jpg", "/images/slider-2.jpg", "/images/slider-3.jpg", "/images/slider-4.jpg"]
+const images = [
+  { src: "/images/slider-1.jpg", alt: "Group of martial arts students and instructors" },
+  { src: "/images/slider-2.jpg", alt: "Close-up of martial arts black belts" },
+  { src: "/images/slider-3.jpg", alt: "Female martial artist performing a high kick" },
+  { src: "/images/slider-4.jpg", alt: "Male martial artist performing a jumping split kick" },
+]
 
 export function ImageSlider() {
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -11,8 +16,7 @@ export function ImageSlider() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
-    }, 5000)
-
+    }, 5000) // Change image every 5 seconds
     return () => clearInterval(interval)
   }, [])
 
@@ -21,16 +25,16 @@ export function ImageSlider() {
       {images.map((image, index) => (
         <div
           key={index}
-          className={`absolute inset-0 transition-opacity duration-1000 ${
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
             index === currentIndex ? "opacity-100" : "opacity-0"
           }`}
         >
           <Image
-            src={image || "/placeholder.svg"}
-            alt={`Slide ${index + 1}`}
+            src={image.src || "/placeholder.svg"}
+            alt={image.alt}
             fill
-            className="object-cover"
-            priority={index === 0}
+            priority={index === 0} // Prioritize loading the first image
+            className="object-cover object-center" // Apply object-cover and center for all images
           />
         </div>
       ))}

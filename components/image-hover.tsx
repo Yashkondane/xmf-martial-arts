@@ -21,10 +21,10 @@ interface ImageHoverProps {
   priority?: boolean
   fill?: boolean
   onClick?: () => void
-  objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down" // Added objectFit prop
+  objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down"
 }
 
-export function ImageHover({
+export default function ImageHover({
   src,
   alt,
   width,
@@ -36,27 +36,24 @@ export function ImageHover({
   priority = false,
   fill = false,
   onClick,
-  objectFit, // Destructure objectFit
+  objectFit = "cover", // Default to cover if not specified
 }: ImageHoverProps) {
   const [isHovered, setIsHovered] = useState(false)
 
   const handleMouseEnter = () => setIsHovered(true)
   const handleMouseLeave = () => setIsHovered(false)
 
-  // Update the responsive classes
   const containerClasses = cn("overflow-hidden relative w-full h-full", onClick && "cursor-pointer", className)
 
-  // Update the image classes for better mobile display
   const imageClasses = cn(
-    "transition-all duration-500 object-cover",
+    "transition-all duration-500",
     effect === "zoom" && "hover:scale-110",
     effect === "blur" && "hover:scale-105",
     effect === "grayscale" && "hover:grayscale",
     imageClassName,
-    objectFit ? `object-${objectFit}` : fill ? "object-cover" : "object-contain", // Use objectFit prop, fallback to fill logic
+    objectFit ? `object-${objectFit}` : fill ? "object-cover" : "object-contain",
   )
 
-  // Overlay variants
   const overlayVariants = {
     hidden: {
       opacity: 0,
@@ -69,25 +66,27 @@ export function ImageHover({
     },
   }
 
-  // Flip variants
   const flipVariants = {
     initial: { rotateY: 0 },
     flipped: { rotateY: 180 },
   }
 
-  // Tilt effect values
   const tiltAmount = 10
 
-  // Reveal effect
   const revealVariants = {
     hidden: { clipPath: "inset(0 100% 0 0)" },
     visible: { clipPath: "inset(0 0% 0 0)", transition: { duration: 0.5 } },
   }
 
-  // Blur effect
   const blurVariants = {
     hidden: { filter: "blur(0px)" },
     visible: { filter: "blur(4px)", transition: { duration: 0.3 } },
+  }
+
+  const effectClasses = {
+    zoom: isHovered ? "scale-105" : "scale-100",
+    tilt: isHovered ? "rotate-1" : "rotate-0",
+    none: "",
   }
 
   return (
@@ -223,16 +222,20 @@ export function ImageHover({
             alt={alt}
             width={width}
             height={height}
-            className={imageClasses}
+            className={cn(
+              "transition-transform duration-300 ease-in-out",
+              effectClasses[effect],
+              `object-${objectFit}`, // Apply objectFit here
+            )}
             priority={priority}
             fill={fill}
           />
           {overlayContent && (
             <motion.div
-              className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center p-2 md:p-4 text-center"
-              initial="hidden"
-              animate={isHovered ? "visible" : "hidden"}
-              variants={overlayVariants}
+              className={cn(
+                "absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300",
+                isHovered ? "opacity-100" : "opacity-0",
+              )}
             >
               {overlayContent}
             </motion.div>
@@ -242,6 +245,3 @@ export function ImageHover({
     </div>
   )
 }
-
-// Make sure to add a default export
-export default ImageHover
