@@ -1,6 +1,6 @@
 # XMF - Extreme Martial Arts and Fitness Website
 
-A modern, responsive website for XMF martial arts academy built with Next.js 14, TypeScript, Supabase, and Resend.
+A modern, responsive website for XMF martial arts academy built with Next.js 14, TypeScript, Supabase, and Resend. 👉 [xmf.co.in](https://xmf.co.in)
 
 ## 🚀 Quick Start
 
