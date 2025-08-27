@@ -8,14 +8,14 @@ A modern, responsive website for XMF martial arts academy built with Next.js 14,
 Download the project files and extract them to your desired location.
 
 ### 2. Install Dependencies
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+```
 
 ### 3. Set Up Environment Variables
 Create a `.env.local` file in the root directory:
 
-\`\`\`env
+```env
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
@@ -29,14 +29,14 @@ RESEND_API_KEY=your_resend_api_key_here
 
 # Optional: Vercel Protection Bypass
 VERCEL_PROTECTION_BYPASS=your_bypass_token_here
-\`\`\`
+```
 
 ### 4. Set Up Supabase
 1. Go to [supabase.com](https://supabase.com) and create a new project
 2. Copy your project URL and keys from Settings > API
 3. Run these SQL commands in your Supabase SQL Editor:
 
-\`\`\`sql
+```sql
 -- Create profiles table
 CREATE TABLE profiles (
   id UUID REFERENCES auth.users(id) PRIMARY KEY,
@@ -119,7 +119,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION handle_new_user();
-\`\`\`
+```
 
 ### 5. Set Up Resend (Email Service)
 1. Go to [resend.com](https://resend.com) and create an account
@@ -130,16 +130,16 @@ CREATE TRIGGER on_auth_user_created
 ### 6. Create Admin User (Optional)
 After creating your first user account, run this SQL to make them an admin:
 
-\`\`\`sql
+```sql
 UPDATE profiles 
 SET role = 'admin' 
 WHERE email = 'your-email@example.com';
-\`\`\`
+```
 
 ### 7. Start Development Server
-\`\`\`bash
+```bash
 npm run dev
-\`\`\`
+```
 
 Visit `http://localhost:3000` to see your website!
 
@@ -147,9 +147,8 @@ Visit `http://localhost:3000` to see your website!
 
 The website includes email functionality powered by Resend:
 
-- **Welcome Emails**: Automatically sent to new users
-- **Contact Form**: Sends inquiries to your business email
-- **Custom Templates**: Professional HTML email templates
+- **email Verification**: Automatically sent to new users
+- **Reset Password**: Used to reset ur password
 - **Error Handling**: Graceful fallbacks when email service is unavailable
 
 ### Email Configuration
@@ -165,7 +164,7 @@ The website includes email functionality powered by Resend:
 
 ## 📁 Project Structure
 
-\`\`\`
+```
 xmf-website/
 ├── app/                    # Next.js App Router pages
 │   ├── api/               # API routes
@@ -179,7 +178,7 @@ xmf-website/
 │   └── resend.ts         # Email service configuration
 ├── public/                # Static assets
 └── ...config files
-\`\`\`
+```
 
 ## 🔧 Available Scripts
 
@@ -231,4 +230,4 @@ If you encounter any issues, check that:
 4. Database tables are created
 5. Dependencies are installed
 
-## NOTE :- This code is 1 version down 
+## NOTE :- INTENTIONAL CHANGES IN THE CODE ARE THEIR , DUE TO UNDERSTANDABLE REASONS
