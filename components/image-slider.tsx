@@ -12,6 +12,7 @@ const images = [
 
 export function ImageSlider() {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [imagesLoaded, setImagesLoaded] = useState<boolean[]>(new Array(images.length).fill(false))
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -20,8 +21,23 @@ export function ImageSlider() {
     return () => clearInterval(interval)
   }, [])
 
+  const handleImageLoad = (index: number) => {
+    setImagesLoaded((prev) => {
+      const newState = [...prev]
+      newState[index] = true
+      return newState
+    })
+  }
+
   return (
-    <div className="relative w-full h-full overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden bg-gray-900">
+      {/* Loading placeholder */}
+      {!imagesLoaded[currentIndex] && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+        </div>
+      )}
+
       {images.map((image, index) => (
         <div
           key={index}
@@ -34,10 +50,32 @@ export function ImageSlider() {
             alt={image.alt}
             fill
             priority={index === 0} // Prioritize loading the first image
-            className="object-cover object-center" // Apply object-cover and center for all images
+            quality={85} // Optimize quality vs file size
+            sizes="100vw" // Specify sizes for better optimization
+            className="object-cover object-center"
+            onLoad={() => handleImageLoad(index)}
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
           />
         </div>
       ))}
+
+      {/* Preload next images */}
+      {images.map(
+        (image, index) =>
+          index !== currentIndex && (
+            <div key={`preload-${index}`} className="hidden">
+              <Image
+                src={image.src || "/placeholder.svg"}
+                alt=""
+                width={1}
+                height={1}
+                priority={false}
+                onLoad={() => handleImageLoad(index)}
+              />
+            </div>
+          ),
+      )}
     </div>
   )
 }

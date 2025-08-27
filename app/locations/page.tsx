@@ -12,7 +12,7 @@ const branches = [
     id: 1,
     name: "TAVEREKERE BRANCH",
     address: "Tavarekere Park, Tank Bund Road, Bhavani Nagar, S.G. Palya, Bengaluru 560029, Karnataka",
-    phone: "+91 98765 43210", // Placeholder phone number
+    phone: "+91 88845 03703", // Placeholder phone number
     timing: "Monday - Sunday: 5:00 AM – 10:00 PM",
     mapLink: "https://maps.app.goo.gl/TNF4cicbRKCuUu457",
   },
@@ -20,7 +20,7 @@ const branches = [
     id: 2,
     name: "FREE KICK BRANCH",
     address: "Free Kick Sports Arena, 46, Kenchappa Road, Frazer Town, Bengaluru 560005, Karnataka",
-    phone: "+91 98765 43210", // Placeholder phone number
+    phone: "+91 88845 03703", // Placeholder phone number
     timing: "Monday - Sunday: 5:00 AM – 10:00 PM",
     mapLink: "https://maps.app.goo.gl/HBFJUkDwcjaGCSWK6?g_st=ac",
   },
@@ -28,7 +28,7 @@ const branches = [
     id: 3,
     name: "THE IWAN BRANCH",
     address: "1st Floor, Church Road, Kanakapura, Basavanagudi, Bengaluru 560004, Karnataka",
-    phone: "+91 98765 43210", // Placeholder phone number
+    phone: "+91 88845 03703", // Placeholder phone number
     timing: "Monday - Sunday: 5:00 AM – 10:00 PM",
     mapLink: "https://maps.app.goo.gl/iz4hbRfFzQh3i8Mt6?g_st=ac",
   },
@@ -36,7 +36,7 @@ const branches = [
     id: 4,
     name: "AVALAHALLI BRANCH",
     address: "Smile Seva Kendra, J.P. Nagar 9th Phase, J.P. Nagar, Bengaluru 560078, Karnataka",
-    phone: "+91 98765 43210", // Placeholder phone number
+    phone: "+91 88845 03703", // Placeholder phone number
     timing: "Monday - Sunday: 5:00 AM – 10:00 PM",
     mapLink: "https://maps.app.goo.gl/zx6oH1d2zQjqHoXr5?g_st=ac",
   },
