@@ -230,3 +230,5 @@ If you encounter any issues, check that:
 3. Resend API key is valid
 4. Database tables are created
 5. Dependencies are installed
+
+## NOTE :- This code is 1 version down 
