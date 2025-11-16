@@ -19,19 +19,52 @@ export default function UpdatePassword() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
+  const [canUpdate, setCanUpdate] = useState(false)
 
   useEffect(() => {
-    // Check if we have a session (user is authenticated via reset link)
-    const checkSession = async () => {
+    // Try to establish a session from the recovery link (tokens in URL hash)
+    const tryInitRecovery = async () => {
+      const hash = typeof window !== "undefined" ? window.location.hash : ""
+      const params = new URLSearchParams(hash.replace("#", ""))
+
+      const type = params.get("type")
+      const access_token = params.get("access_token")
+      const refresh_token = params.get("refresh_token")
+
+      // If this is a recovery link, set the session so updateUser() can succeed
+      if (type === "recovery" && access_token && refresh_token) {
+        const { error } = await supabase.auth.setSession({
+          access_token,
+          refresh_token,
+        })
+        if (!error) {
+          setCanUpdate(true)
+          // Clean the URL so tokens aren’t visible
+          window.history.replaceState({}, document.title, window.location.pathname)
+          return
+        }
+      }
+
+      // Fallback: if a session already exists, we’re good
       const { data } = await supabase.auth.getSession()
-      if (!data.session) {
-        // No session, redirect to reset password page
-        router.push("/reset-password")
+      if (data.session) {
+        setCanUpdate(true)
       }
     }
 
-    checkSession()
-  }, [router])
+    void tryInitRecovery()
+
+    // Also listen for PASSWORD_RECOVERY in case Supabase sets the session asynchronously
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
+        setCanUpdate(true)
+      }
+    })
+
+    return () => {
+      sub.subscription.unsubscribe()
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -83,6 +116,14 @@ export default function UpdatePassword() {
             <p className="text-gray-600 mt-2">Enter your new password below.</p>
           </div>
 
+          {!canUpdate && (
+            <div className="mb-4 text-sm text-gray-600">
+              {
+                "Open the password reset link from your email to continue. If this page was opened directly, request a new reset email."
+              }
+            </div>
+          )}
+
           {error && (
             <Alert variant="destructive" className="mb-6">
               <AlertCircle className="h-4 w-4" />
@@ -101,7 +142,7 @@ export default function UpdatePassword() {
             </Alert>
           )}
 
-          {!success && (
+          {!success && canUpdate && (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="password">New Password</Label>
@@ -129,7 +170,11 @@ export default function UpdatePassword() {
                 />
               </div>
 
-              <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white py-3" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full bg-red-600 hover:bg-red-700 text-white py-3"
+                disabled={isLoading || !canUpdate}
+              >
                 {isLoading ? "Updating..." : "Update Password"}
               </Button>
             </form>
