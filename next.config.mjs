@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Add this to ensure your production domain is used
   env: {
     NEXT_PUBLIC_SITE_URL: "https://www.xmf.co.in",
   },
@@ -11,7 +10,22 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    unoptimized: false,
+    domains: ['www.xmf.co.in', 'xmf.co.in'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.vercel.app',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.xmf.co.in',
+      },
+      {
+        protocol: 'https',
+        hostname: 'xmf.co.in',
+      }
+    ],
   },
   async redirects() {
     return [
@@ -20,13 +34,11 @@ const nextConfig = {
         has: [
           {
             type: "host",
-            // This regex matches any Vercel deployment URL (e.g., your-project-xxxx.vercel.app)
-            // You might need to adjust this if you have custom preview domains
             value: "(.*)\\.vercel\\.app",
           },
         ],
         destination: "https://www.xmf.co.in/:path*",
-        permanent: true, // Use 308 for permanent redirect
+        permanent: true,
       },
     ];
   },
