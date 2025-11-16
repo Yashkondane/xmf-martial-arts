@@ -1,336 +1,387 @@
 "use client"
 
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { useEffect, useState } from "react"
-import { useRouter } from 'next/navigation'
-import { createClient } from "@/lib/supabase/client"
+import { useRouter } from "next/navigation"
+import Image from "next/image"
+import { supabase, getUserProfile, signOut } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { User, Award, MapPin, Phone, Mail, Users, Heart, Weight, Home, Calendar, LogOut, Trophy, TrendingUp } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { CalendarDays, User, Award, Clock, LogOut } from "lucide-react"
 
-interface StudentData {
-  id: string
-  email: string
-  student_name: string
-  date_of_birth: string
-  gender: string
-  contact_number: string
-  club_location: string
-  blood_group: string
-  weight: string
-  address: string
-  current_belt: string
-  guardian_name: string
-  emergency_contact: string
-}
-
-const beltHierarchy = [
-  { name: "WHITE", color: "bg-white border-2 border-gray-300", order: 1 },
-  { name: "YELLOW STRIPE", color: "bg-gradient-to-r from-white to-yellow-400", order: 2 },
-  { name: "YELLOW BELT", color: "bg-yellow-400", order: 3 },
-  { name: "GREEN BELT", color: "bg-green-500", order: 4 },
-  { name: "BLUE BELT", color: "bg-blue-500", order: 5 },
-  { name: "RED STRIPE", color: "bg-gradient-to-r from-white to-red-500", order: 6 },
-  { name: "RED BELT", color: "bg-red-500", order: 7 },
-  { name: "BLACK STRIPE", color: "bg-gradient-to-r from-red-600 to-black", order: 8 },
-  { name: "BLACKL STRIPE", color: "bg-gradient-to-r from-red-600 to-black", order: 8 },
-  { name: "BLACK BELT", color: "bg-black", order: 9 },
-]
-
-export default function StudentDashboard() {
+export default function Dashboard() {
   const router = useRouter()
-  const [student, setStudent] = useState<StudentData | null>(null)
+  const [user, setUser] = useState<any>(null)
+  const [profile, setProfile] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
-  const supabase = createClient()
 
   useEffect(() => {
-    const loadStudentData = async () => {
+    const checkUser = async () => {
       try {
-        const { data: { user }, error: authError } = await supabase.auth.getUser()
+        const { data } = await supabase.auth.getSession()
 
-        if (authError || !user) {
-          router.push("/student-login")
+        if (!data.session) {
+          router.push("/signin")
           return
         }
 
-        // Fetch student data from students table
-        const { data: studentData, error: studentError } = await supabase
-          .from("students")
-          .select("*")
-          .eq("id", user.id)
-          .single()
+        setUser(data.session.user)
 
-        if (studentError) {
-          console.error("Error fetching student:", studentError)
-          setError("Could not load your data. Please contact administration.")
-        } else {
-          setStudent(studentData)
+        const { profile: userProfile, error: profileError } = await getUserProfile(data.session.user.id)
+
+        if (profileError) {
+          console.error("Error fetching profile:", profileError)
+          setError("Could not load your profile. Please try again later.")
         }
+
+        setProfile(
+          userProfile || {
+            name: data.session.user.user_metadata?.name || "Student",
+            email: data.session.user.email,
+            program: data.session.user.user_metadata?.program || "taekwondo",
+          },
+        )
 
         setLoading(false)
       } catch (err) {
         console.error("Dashboard error:", err)
-        setError("An unexpected error occurred.")
+        setError("An unexpected error occurred. Please try again later.")
         setLoading(false)
       }
     }
 
-    loadStudentData()
-  }, [router, supabase])
+    checkUser()
+  }, [router])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push("/student-login")
-  }
-
-  const getBeltInfo = (currentBelt: string) => {
-    const normalized = currentBelt.toUpperCase()
-    const current = beltHierarchy.find(b => b.name === normalized)
-    const currentOrder = current?.order || 1
-    const nextBelt = beltHierarchy.find(b => b.order === currentOrder + 1)
-    const progress = (currentOrder / beltHierarchy.length) * 100
-
-    return { current, nextBelt, progress, currentOrder }
+    await signOut()
+    router.push("/")
   }
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-red-900 via-black to-gray-900">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600 mx-auto"></div>
-          <p className="mt-4 text-white">Loading your dashboard...</p>
+          <p className="mt-4">Loading your dashboard...</p>
         </div>
       </div>
     )
   }
-
-  if (!student) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-red-900 via-black to-gray-900">
-        <Card className="max-w-md">
-          <CardHeader>
-            <CardTitle className="text-red-600">Error</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-4">{error || "Student data not found."}</p>
-            <Button onClick={() => router.push("/student-login")} className="w-full">
-              Back to Login
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  const beltInfo = getBeltInfo(student.current_belt)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-900 via-black to-gray-900 py-8 px-4">
-      <div className="container max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-white">Welcome, {student.student_name}</h1>
-            <p className="text-gray-300">XMF Student Dashboard</p>
-          </div>
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20" 
-            onClick={handleSignOut}
-          >
-            <LogOut className="h-4 w-4" />
-            Sign Out
-          </Button>
-        </div>
+    <div className="flex flex-col min-h-screen">
+      {/* Removed the duplicate Navbar component from here */}
 
-        {/* Personal Information Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <Card className="bg-black/40 border-red-900/20 backdrop-blur">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white">Current Belt</CardTitle>
-              <Award className="h-4 w-4 text-red-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2">
-                <div className={`h-6 w-16 rounded ${beltInfo.current?.color}`}></div>
-                <span className="text-white font-medium">{student.current_belt}</span>
-              </div>
-            </CardContent>
-          </Card>
+      <main className="flex-1 bg-gray-50">
+        <div className="container py-8">
+          {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">{error}</div>}
 
-          <Card className="bg-black/40 border-red-900/20 backdrop-blur">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white">Club Location</CardTitle>
-              <MapPin className="h-4 w-4 text-red-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl font-bold text-white">{student.club_location}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-black/40 border-red-900/20 backdrop-blur">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white">Blood Group</CardTitle>
-              <Heart className="h-4 w-4 text-red-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl font-bold text-white">{student.blood_group}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-black/40 border-red-900/20 backdrop-blur">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white">Weight</CardTitle>
-              <Weight className="h-4 w-4 text-red-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl font-bold text-white">{student.weight}</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Belt Progress Section */}
-        <Card className="mb-8 bg-black/40 border-red-900/20 backdrop-blur">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Trophy className="h-5 w-5 text-red-400" />
-              Belt Progression
-            </CardTitle>
-            <CardDescription className="text-gray-400">Your journey through the belt system</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              {/* Current Progress */}
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-white font-medium">Current Progress</span>
-                  <span className="text-red-400 font-bold">{Math.round(beltInfo.progress)}%</span>
-                </div>
-                <div className="w-full bg-gray-700 rounded-full h-4">
-                  <div 
-                    className="bg-gradient-to-r from-red-600 to-red-400 h-4 rounded-full transition-all duration-500 flex items-center justify-end pr-2"
-                    style={{ width: `${beltInfo.progress}%` }}
-                  >
-                    <TrendingUp className="h-3 w-3 text-white" />
-                  </div>
-                </div>
-                {beltInfo.nextBelt && (
-                  <p className="text-sm text-gray-400 mt-2">
-                    Next goal: {beltInfo.nextBelt.name}
-                  </p>
-                )}
-              </div>
-
-              {/* Belt Hierarchy Visual */}
-              <div>
-                <h3 className="text-white font-medium mb-3">Belt System</h3>
-                <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-2">
-                  {beltHierarchy.map((belt) => (
-                    <div key={belt.name} className="text-center">
-                      <div 
-                        className={`h-8 rounded mx-auto mb-1 ${belt.color} ${
-                          belt.order <= beltInfo.currentOrder 
-                            ? 'ring-2 ring-red-400 ring-offset-2 ring-offset-gray-900' 
-                            : 'opacity-40'
-                        }`}
-                      ></div>
-                      <p className="text-xs text-gray-400">{belt.name.split(' ')[0]}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+            <div>
+              <h1 className="text-3xl font-bold">Welcome, {profile?.name || "Student"}</h1>
+              <p className="text-gray-600">Manage your XMF-EXTREME account and training</p>
             </div>
-          </CardContent>
-        </Card>
+            <Button variant="outline" className="flex items-center gap-2 mt-4 md:mt-0" onClick={handleSignOut}>
+              <LogOut className="h-4 w-4" />
+              Sign Out
+            </Button>
+          </div>
 
-        {/* Student Details Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Personal Information */}
-          <Card className="bg-black/40 border-red-900/20 backdrop-blur">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <User className="h-5 w-5 text-red-400" />
-                Personal Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-start gap-3 pb-3 border-b border-gray-700">
-                <Calendar className="h-5 w-5 text-red-400 mt-0.5" />
-                <div>
-                  <p className="text-xs text-gray-400">Date of Birth</p>
-                  <p className="text-white font-medium">{student.date_of_birth}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3 pb-3 border-b border-gray-700">
-                <User className="h-5 w-5 text-red-400 mt-0.5" />
-                <div>
-                  <p className="text-xs text-gray-400">Gender</p>
-                  <p className="text-white font-medium">{student.gender}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3 pb-3 border-b border-gray-700">
-                <Phone className="h-5 w-5 text-red-400 mt-0.5" />
-                <div>
-                  <p className="text-xs text-gray-400">Contact Number</p>
-                  <p className="text-white font-medium">{student.contact_number}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3 pb-3 border-b border-gray-700">
-                <Mail className="h-5 w-5 text-red-400 mt-0.5" />
-                <div>
-                  <p className="text-xs text-gray-400">Email</p>
-                  <p className="text-white font-medium break-all">{student.email}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                <Home className="h-5 w-5 text-red-400 mt-0.5" />
-                <div>
-                  <p className="text-xs text-gray-400">Address</p>
-                  <p className="text-white font-medium">{student.address}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <Tabs defaultValue="overview" className="w-full">
+            <TabsList className="mb-8">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="schedule">My Schedule</TabsTrigger>
+              <TabsTrigger value="progress">My Progress</TabsTrigger>
+              <TabsTrigger value="account">Account</TabsTrigger>
+            </TabsList>
 
-          {/* Guardian/Emergency Information */}
-          <Card className="bg-black/40 border-red-900/20 backdrop-blur">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Users className="h-5 w-5 text-red-400" />
-                Guardian & Emergency Contact
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-start gap-3 pb-3 border-b border-gray-700">
-                <User className="h-5 w-5 text-red-400 mt-0.5" />
-                <div>
-                  <p className="text-xs text-gray-400">Guardian Name</p>
-                  <p className="text-white font-medium">{student.guardian_name}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                <Phone className="h-5 w-5 text-red-400 mt-0.5" />
-                <div>
-                  <p className="text-xs text-gray-400">Emergency Contact</p>
-                  <p className="text-white font-medium">{student.emergency_contact}</p>
-                </div>
+            <TabsContent value="overview">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Current Program</CardTitle>
+                    <Award className="h-4 w-4 text-red-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold capitalize">{profile?.program || "Not enrolled"}</div>
+                    <p className="text-xs text-muted-foreground">
+                      {profile?.program === "taekwondo" && "Korean martial art focused on kicking techniques"}
+                      {profile?.program === "bostaff" && "Ancient weapon training for coordination and strength"}
+                      {profile?.program === "calisthenics" && "Bodyweight exercises for functional strength"}
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Next Class</CardTitle>
+                    <CalendarDays className="h-4 w-4 text-red-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">Wednesday</div>
+                    <p className="text-xs text-muted-foreground">6:00 PM - 7:30 PM</p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Training Hours</CardTitle>
+                    <Clock className="h-4 w-4 text-red-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">12 hours</div>
+                    <p className="text-xs text-muted-foreground">This month</p>
+                  </CardContent>
+                </Card>
               </div>
 
-              <div className="mt-6 p-4 bg-red-900/20 rounded-lg border border-red-900/30">
-                <p className="text-xs text-gray-300 mb-2">Important Information</p>
-                <p className="text-sm text-white">
-                  In case of emergency, your guardian will be contacted immediately at the number provided above.
-                </p>
+              <div className="mt-8">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Upcoming Events</CardTitle>
+                    <CardDescription>Stay updated with upcoming classes and events</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between border-b pb-4">
+                        <div>
+                          <h3 className="font-medium">Belt Promotion Test</h3>
+                          <p className="text-sm text-gray-500">Saturday, May 15 • 10:00 AM</p>
+                        </div>
+                        <Button variant="outline" size="sm">
+                          Details
+                        </Button>
+                      </div>
+                      <div className="flex items-center justify-between border-b pb-4">
+                        <div>
+                          <h3 className="font-medium">Sparring Workshop</h3>
+                          <p className="text-sm text-gray-500">Tuesday, May 18 • 6:30 PM</p>
+                        </div>
+                        <Button variant="outline" size="sm">
+                          Details
+                        </Button>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-medium">Regional Tournament</h3>
+                          <p className="text-sm text-gray-500">Saturday, June 5 • 9:00 AM</p>
+                        </div>
+                        <Button variant="outline" size="sm">
+                          Details
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
-            </CardContent>
-          </Card>
+            </TabsContent>
+
+            <TabsContent value="schedule">
+              <Card>
+                <CardHeader>
+                  <CardTitle>My Class Schedule</CardTitle>
+                  <CardDescription>View and manage your upcoming classes</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between border-b pb-4">
+                      <div className="flex items-center gap-4">
+                        <div className="bg-red-100 text-red-600 p-3 rounded-lg">
+                          <CalendarDays className="h-6 w-6" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium capitalize">{profile?.program || "Class"}</h3>
+                          <p className="text-sm text-gray-500">Monday • 6:00 PM - 7:30 PM</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        Cancel
+                      </Button>
+                    </div>
+                    <div className="flex items-center justify-between border-b pb-4">
+                      <div className="flex items-center gap-4">
+                        <div className="bg-red-100 text-red-600 p-3 rounded-lg">
+                          <CalendarDays className="h-6 w-6" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium capitalize">{profile?.program || "Class"}</h3>
+                          <p className="text-sm text-gray-500">Wednesday • 6:00 PM - 7:30 PM</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        Cancel
+                      </Button>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="bg-red-100 text-red-600 p-3 rounded-lg">
+                          <CalendarDays className="h-6 w-6" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium capitalize">{profile?.program || "Class"}</h3>
+                          <p className="text-sm text-gray-500">Friday • 6:00 PM - 7:30 PM</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button className="w-full bg-red-600 hover:bg-red-700">Book Additional Class</Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="progress">
+              <Card>
+                <CardHeader>
+                  <CardTitle>My Progress</CardTitle>
+                  <CardDescription>Track your martial arts journey</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-8">
+                    <div>
+                      <h3 className="font-medium mb-2">Current Belt</h3>
+                      <div className="flex items-center gap-4">
+                        <div className="h-4 w-16 bg-white border border-gray-300 rounded"></div>
+                        <span>White Belt</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="font-medium mb-2">Progress to Next Belt</h3>
+                      <div className="w-full bg-gray-200 rounded-full h-2.5">
+                        <div className="bg-red-600 h-2.5 rounded-full" style={{ width: "45%" }}></div>
+                      </div>
+                      <p className="text-sm text-gray-500 mt-2">45% complete - Estimated promotion: July 2025</p>
+                    </div>
+
+                    <div>
+                      <h3 className="font-medium mb-2">Skills Assessment</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm">Technique</span>
+                            <span className="text-sm font-medium">70%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div className="bg-red-600 h-2 rounded-full" style={{ width: "70%" }}></div>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm">Strength</span>
+                            <span className="text-sm font-medium">65%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div className="bg-red-600 h-2 rounded-full" style={{ width: "65%" }}></div>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm">Flexibility</span>
+                            <span className="text-sm font-medium">55%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div className="bg-red-600 h-2 rounded-full" style={{ width: "55%" }}></div>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm">Discipline</span>
+                            <span className="text-sm font-medium">80%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div className="bg-red-600 h-2 rounded-full" style={{ width: "80%" }}></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="account">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Account Information</CardTitle>
+                  <CardDescription>Manage your personal details and preferences</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    <div className="flex flex-col md:flex-row gap-4 items-center">
+                      <div className="relative h-24 w-24 rounded-full overflow-hidden bg-gray-200">
+                        {profile?.avatar_url ? (
+                          <Image
+                            src={profile.avatar_url || "/placeholder.svg"}
+                            alt="Profile"
+                            fill
+                            className="object-cover"
+                          />
+                        ) : profile ? (
+                          <Image src="/images/xmf-logo-white-bg.jpeg" alt="XMF Logo" fill className="object-cover" />
+                        ) : (
+                          <User className="h-full w-full p-4 text-gray-400" />
+                        )}
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-lg">{profile?.name}</h3>
+                        <p className="text-gray-500">{user?.email}</p>
+                        <p className="text-sm text-gray-500 mt-1">
+                          Member since {new Date(user?.created_at || Date.now()).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h3 className="font-medium mb-2">Personal Information</h3>
+                        <div className="space-y-4">
+                          <div>
+                            <Label htmlFor="name">Full Name</Label>
+                            <Input id="name" defaultValue={profile?.name} className="mt-1" />
+                          </div>
+                          <div>
+                            <Label htmlFor="email">Email Address</Label>
+                            <Input id="email" defaultValue={user?.email} className="mt-1" disabled />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h3 className="font-medium mb-2">Program Information</h3>
+                        <div className="space-y-4">
+                          <div>
+                            <Label htmlFor="program">Current Program</Label>
+                            <Input id="program" defaultValue={profile?.program} className="mt-1 capitalize" disabled />
+                          </div>
+                          <div>
+                            <Label htmlFor="membership">Membership Type</Label>
+                            <Input id="membership" defaultValue="Standard" className="mt-1" disabled />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <Button variant="outline">Cancel</Button>
+                  <Button className="bg-red-600 hover:bg-red-700">Save Changes</Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
-      </div>
+      </main>
+
+      {/* Removed the duplicate Footer component from here */}
     </div>
   )
 }
