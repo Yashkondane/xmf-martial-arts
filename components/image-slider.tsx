@@ -12,21 +12,14 @@ const images = [
 
 export function ImageSlider() {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [mounted, setMounted] = useState(false)
   const [imagesLoaded, setImagesLoaded] = useState<boolean[]>(new Array(images.length).fill(false))
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  useEffect(() => {
-    if (!mounted) return
-    
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
-    }, 5000)
+    }, 5000) // Change image every 5 seconds
     return () => clearInterval(interval)
-  }, [mounted])
+  }, [])
 
   const handleImageLoad = (index: number) => {
     setImagesLoaded((prev) => {
@@ -36,19 +29,11 @@ export function ImageSlider() {
     })
   }
 
-  if (!mounted) {
-    return (
-      <div className="relative w-full h-full bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-      </div>
-    )
-  }
-
   return (
     <div className="relative w-full h-full overflow-hidden bg-gray-900">
       {/* Loading placeholder */}
       {!imagesLoaded[currentIndex] && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10">
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
         </div>
       )}
@@ -57,28 +42,26 @@ export function ImageSlider() {
         <div
           key={index}
           className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentIndex ? "opacity-100 z-0" : "opacity-0 z-0"
+            index === currentIndex ? "opacity-100" : "opacity-0"
           }`}
         >
           <Image
             src={image.src || "/placeholder.svg"}
             alt={image.alt}
             fill
-            priority={index === 0}
-            quality={90}
-            sizes="100vw"
+            priority={index === 0} // Prioritize loading the first image
+            quality={85} // Optimize quality vs file size
+            sizes="100vw" // Specify sizes for better optimization
             className="object-cover object-center"
             onLoad={() => handleImageLoad(index)}
-            onError={(e) => {
-              console.error(`[v0] Failed to load image: ${image.src}`)
-              // Fallback to placeholder on error
-              e.currentTarget.src = "/placeholder.svg?height=800&width=1200"
-            }}
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
           />
         </div>
       ))}
 
-      {imagesLoaded[0] && images.map(
+      {/* Preload next images */}
+      {images.map(
         (image, index) =>
           index !== currentIndex && (
             <div key={`preload-${index}`} className="hidden">
