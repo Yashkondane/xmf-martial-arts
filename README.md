@@ -26,10 +26,6 @@ XMF-EXTREME is a modern martial arts academy website featuring student authentic
 - **Server Actions** - Next.js server-side operations
 - **API Routes** - RESTful endpoints
 
-### AI & Services
-- **Google Gemini API** - AI chatbot support
-- **Resend** - Email service for notifications
-
 ### DevOps
 - **Vercel** - Deployment & hosting
 - **Git** - Version control
@@ -356,8 +352,9 @@ This project is proprietary and confidential.
 
 XMF-EXTREME Martial Arts Academy
 - Website: [www.xmf.co.in](https://www.xmf.co.in)
-- Email: info@xmf.co.in
+- Email: kondaneyash@gmail.com
 
 ---
 
-Built with ❤️ by the XMF Development Team
+Built with ❤️ by Yah kondane
+
