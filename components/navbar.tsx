@@ -147,7 +147,7 @@ export function Navbar() {
                 <Link href="/signin">
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button variant="outline" className="button-hover">
-                      Sign In
+                      Login
                     </Button>
                   </motion.div>
                 </Link>
